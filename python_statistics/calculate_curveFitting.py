@@ -1,5 +1,8 @@
 from .calculate_dependencies import *
 from .calculate_base import calculate_base
+
+'''TODO: https://lmfit.github.io/lmfit-py/intro.html'''
+
 class calculate_curveFitting(calculate_base):
     # linear regression
     def calculate_regressionParameters(self,concentrations_I,ratios_I,dilution_factors_I,fit_I,weighting_I,use_area_I):
