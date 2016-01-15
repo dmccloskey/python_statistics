@@ -1,4 +1,4 @@
-from .calculate_dependencies import *
+﻿from .calculate_dependencies import *
 from .calculate_base import calculate_base
 class calculate_pca(calculate_base):
     def calculate_pca(self):
@@ -46,11 +46,13 @@ class calculate_pca(calculate_base):
                 tmp['score_' + str(PC[0])] = d['score'];
                 tmp['var_proportion_'+str(PC[0])] = d['var_proportion'];
                 tmp['var_cumulative_'+str(PC[0])] = d['var_cumulative'];
-                tmp['axislabel'+str(PC[0])] = 'PC' + str(PC[0]) + ' [' + str(round(d['var_proportion']*100,2)) + '%]';
+                #tmp['axislabel'+str(PC[0])] = 'PC' + str(PC[0]) + ' [' + str(round(d['var_proportion']*100,2)) + '%]';
+                tmp['axislabel'+str(PC[0])] = 'PC' + str(PC[0]);
                 tmp['score_' + str(PC[1])] = data_scores[PC[1]][cnt]['score'];
-                tmp['var_proportion_'+str(PC[1])] = data_scores[PC[1]][cnt]['var_proportion'];
-                tmp['var_cumulative_'+str(PC[1])] = data_scores[PC[1]][cnt]['var_cumulative'];
-                tmp['axislabel'+str(PC[1])] = 'PC' + str(PC[1]) + ' [' + str(round(data_scores[PC[1]][cnt]['var_proportion']*100,2)) + '%]';
+                #tmp['var_proportion_'+str(PC[1])] = data_scores[PC[1]][cnt]['var_proportion'];
+                #tmp['var_cumulative_'+str(PC[1])] = data_scores[PC[1]][cnt]['var_cumulative'];
+                #tmp['axislabel'+str(PC[1])] = 'PC' + str(PC[1]) + ' [' + str(round(data_scores[PC[1]][cnt]['var_proportion']*100,2)) + '%]';
+                tmp['axislabel'+str(PC[1])] = 'PC' + str(PC[1]);
                 del tmp['score'];
                 del tmp['axis'];
                 del tmp['var_proportion'];
