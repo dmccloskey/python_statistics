@@ -1,4 +1,4 @@
-from .calculate_dependencies import *
+﻿from .calculate_dependencies import *
 from .calculate_base import calculate_base
 class calculate_statisticsDescriptive(calculate_base):
 
@@ -280,3 +280,38 @@ class calculate_statisticsDescriptive(calculate_base):
         else:
             difference_O = difference_O;
         return difference_O;
+
+    def calculate_descriptiveStats(self,
+                data_I,
+                confidence_I = 0.95,
+                iq_range_I = [25,75]):
+        '''calculate the mean, var, cv, 95% CI,
+        min, max, median, and IQ ranges for the data
+        INPUT:
+        data_I = array of data points
+        OUTPUT:
+        descriptiveStats = {} with fields
+            'mean'
+            'var'
+            'cv'
+            'lb'
+            'ub'
+            'min'
+            'max'
+            'median'
+            'iq_1'
+            'iq_3'
+        '''
+        mean,var,cv,lb,ub = self.calculate_ave_var_cv(data_I);
+        min, max, median, iq_1, iq_3 = self.calculate_interquartiles(data_I);
+        descriptiveStats_O = {
+            'mean':mean,
+            'var':var,
+            'cv':cv,
+            'lb':lb,
+            'ub':ub,
+            'min':min,
+            'max':max,
+            'median':median,
+            'iq_1':iq_1,
+            'iq_3':iq_3};

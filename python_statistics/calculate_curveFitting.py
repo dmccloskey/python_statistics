@@ -1,5 +1,7 @@
-from .calculate_dependencies import *
+﻿from .calculate_dependencies import *
 from .calculate_base import calculate_base
+from .calculate_statisticsDescriptive import calculate_statisticsDescriptive
+from .calculate_statisticsUnivariate import calculate_statisticsUnivariate
 
 '''TODO: https://lmfit.github.io/lmfit-py/intro.html'''
 
@@ -7,26 +9,29 @@ class calculate_curveFitting(calculate_base):
     # linear regression
     def calculate_regressionParameters(self,concentrations_I,ratios_I,dilution_factors_I,fit_I,weighting_I,use_area_I):
         '''calculate regression parameters for a given component
-        NOTE: intended to be used in a loop'''
-        # input:
-        #       concentrations_I
-        #       ratios_I
-        #       dilution_factors_I
-        #       fit_I
-        #       weighting_I
-        #       use_area_I
-        # ouput:
-        #       slope
-        #       intercept
-        #       correlation
-        #       lloq
-        #       uloq
-        #       points
+        NOTE: intended to be used in a loop
+        INPUT:
+            concentrations_I
+            ratios_I
+            dilution_factors_I
+            fit_I
+            weighting_I
+            use_area_I
+        OUTPUT:
+            slope
+            intercept
+            correlation
+            lloq
+            uloq
+            points
 
-        # note need to make complimentary method to query concentrations, ratios, and dilution factors
-        # for each component prior to calling this function
+        note need to make complimentary method to query concentrations, ratios, and dilution factors
+        for each component prior to calling this function
 
-        #TODO
+        TODO:
+        from scipy import stats
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+        '''
 
         pass;
 
@@ -149,3 +154,57 @@ class calculate_curveFitting(calculate_base):
         a,i = intercepts for degree i
 
         '''
+
+    def calculate_adjustedR2(self,r2_I,N_I,p_I):
+        '''Calculate the adjusted r2 value
+        INPUT:
+        r2_I = sample R-square
+        p = number of predictors
+        N = total sample size
+        OUTPUT:
+        r2adj_O = adjusted R-squared
+        '''
+        r2adj_O = 1-(1-r2_I)*(N_I-1)/(N_I-p_I-1);
+
+    def calculate_R2(self,data_I,fit_I):
+        '''Calculate the r2 from the data and fit
+        INPUT:
+        data_I = array of data
+        fit_I = array of fitted data
+        OUTPUT:
+        rse_O = residual standard error
+        r2_O = r2 value
+        rho_O = pearson correlation coefficient
+        pval_O = p-value of the correlation
+        '''
+        #calculate SSREG,SSTOT,r2
+        yhat = fit_I;
+        n = len(data_I);
+        ybar = numpy.sum(data_I)/n;
+        ssreg = numpy.sum((yhat-ybar)**2)
+        sstot = numpy.sum((y - ybar)**2)        
+        r2_O = ssreg/sstot; #check: 1-ssreg/sstot
+        #calculate RSE
+        rse_O = numpy.sqrt(1/(n-2)*ssreg);
+        #calculate the correlation coefficient and p-value
+        rho_O, pval_O = scipy.stats.pearsonr(yhat,ybar);
+
+        if rho_O**2!=r2_O:
+            print('pearson_r**2 and ssreg/sstot yield different values');
+        return rse_O,r2_O,rho_O,pval_O;
+
+    def calculate_tStatParameter(self,par_val_I,par_se_I,par_n_I):
+        '''calculate the t-stat for the parameter
+        INPUT:
+        par_val_I = parameter value
+        par_se_I = parmater std error
+        par_n_I = number of parameters
+        OUTPUT:
+        tstat_O = two-sided t-test statistic
+        pval_O = p-value
+        '''
+        from scipy.special import stdtr
+        tstat_O = (par_val_I-0.0)/par_se_I;
+        dof = par_n_I-2;
+        pval_O = 2*stdtr(data_1_dof, -np.abs(tf));
+        return tstat_O,pval_O;
