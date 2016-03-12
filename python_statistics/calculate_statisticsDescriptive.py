@@ -149,32 +149,12 @@ class calculate_statisticsDescriptive(calculate_base):
         else:
             print("bad data provided!");
             return None;
-        if scale_values_I and scale_values_I == "log2":
-            data_1 = numpy.log2(data_1_I);
-            data_2 = numpy.log2(data_2_I);
-        elif scale_values_I and scale_values_I == "log10":
-            data_1 = numpy.log10(data_1_I);
-            data_2 = numpy.log10(data_2_I);
-        elif scale_values_I and scale_values_I == "ln":
-            data_1 = numpy.log(data_1_I);
-            data_2 = numpy.log(data_2_I);
-        elif scale_values_I and scale_values_I == "abs":
-            data_1 = numpy.abs(data_1_I);
-            data_2 = numpy.abs(data_2_I);
-        elif scale_values_I and scale_values_I == "exp":
-            data_1 = numpy.exp(data_1_I);
-            data_2 = numpy.exp(data_2_I);
-        elif scale_values_I and scale_values_I == "exp2":
-            data_1 = numpy.exp2(data_1_I);
-            data_2 = numpy.exp2(data_2_I);
-        elif scale_values_I and scale_values_I == "^10":
-            data_1 = numpy.power(data_1_I,10);
-            data_2 = numpy.power(data_2_I,10);
-        elif scale_values_I and scale_values_I == "^2":
-            data_1 = numpy.power(data_1_I,2);
-            data_2 = numpy.power(data_2_I,2);
+        supported_scale_values = ["log2","log10","ln","abs","exp","exp2","^10","^2"]
+        if scale_values_I and scale_values_I in supported_scale_values: #TODO: test
+            data_1 = self.scale_values(data_1_I,scale_values_I);
+            data_2 = self.scale_values(data_2_I,scale_values_I);
         elif scale_values_I:
-            print("scale_values_I not recognized.  No scaling will be applied.");
+            print('scale_values_I not recognized.  No scaling will be applied');
             data_1 = data_1_I;
             data_2 = data_2_I;
         else:
@@ -191,15 +171,9 @@ class calculate_statisticsDescriptive(calculate_base):
             fold_change_O = data_2/data_1;
             print("type_I not recognized.  Relative type will be applied as default.");
         # scale the fold change
+        supported_scale_fold_change = ["log2","log10","ln","abs","sqrt"]
         if scale_fold_change_I and scale_fold_change_I == "log2":
-            fold_change_O = numpy.log2(fold_change_O);
-        elif scale_fold_change_I and scale_fold_change_I == "log10":
-            fold_change_O = numpy.log10(fold_change_O);
-        elif scale_fold_change_I and scale_fold_change_I == "ln":
-            fold_change_O = numpy.log(fold_change_O);
-        elif scale_fold_change_I and scale_fold_change_I == "abs":
-            fold_change_O = numpy.abs(fold_change_O);
-        elif scale_fold_change_I and scale_fold_change_I == "sqrt":
+            fold_change_O = self.scale_values(fold_change_O,scale_fold_change_I);
             fold_change_O = numpy.sqrt(fold_change_O);
         elif scale_fold_change_I:
             print("scale_fold_change_I not recognized.  No scaling will be applied.");
@@ -207,6 +181,40 @@ class calculate_statisticsDescriptive(calculate_base):
         else:
             fold_change_O = fold_change_O;
         return fold_change_O;
+    def scale_values(self,data_1_I,scale_I=None):
+        '''Scale values
+        INPUT:
+        data_1_I = float, value to scale
+        scale_I = string, type of scale
+        OUTPUT:
+        data_O = float, scaled version of data_1
+        '''
+        data_O = None;
+        if scale_I == "log2":
+            data_O = numpy.log2(data_1_I);
+        elif scale_I == "log10":
+            data_O = numpy.log10(data_1_I);
+        elif scale_I == "ln":
+            data_O = numpy.log(data_1_I);
+        elif scale_I == "abs":
+            data_O = numpy.abs(data_1_I);
+        elif scale_I == "exp":
+            data_O = numpy.exp(data_1_I);
+        elif scale_I == "exp2":
+            data_O = numpy.exp2(data_1_I);
+        elif scale_I == "^10":
+            data_O = numpy.power(data_1_I,10);
+        elif scale_I == "^2":
+            data_O = numpy.power(data_1_I,2);
+        elif scale_I == "sqrt":
+            data_O = numpy.sqrt(data_1_I);
+        elif scale_I:
+            print("scale_I not recognized.  No scaling will be applied.");
+            data_O = data_1_I;
+        else:
+            print("scale_I not recognized.  No scaling will be applied.");
+            data_O = data_1_I;
+        return data_O;
     # calculate the difference
     def calculate_difference(self,data_1_I,data_2_I,type_I = 'relative',scale_values_I = None,scale_difference_I = None):
         """Calculate the differencefold change between two data value 1 and 2
