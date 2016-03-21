@@ -4,6 +4,9 @@ import itertools
 from listDict.listDict import listDict
 import copy
 
+from sklearn import svm
+from sklearn.covariance import EllipticEnvelope
+
 def _rsd(data_I):
     '''calculate the relative standard deviation (RSD)
     INPUT:
@@ -90,5 +93,18 @@ class calculate_outliers(calculate_base):
 
         return outliers_O;
 
+    def calculate_OneClassSVM(self,kernel='rbf', degree=3, gamma='auto', coef0=0.0, tol=0.001, nu=0.5, shrinking=True, cache_size=200, verbose=False, max_iter=-1, random_state=None):
+        '''
+        http://scikit-learn.org/stable/modules/generated/sklearn.svm.OneClassSVM.html#sklearn.svm.OneClassSVM
+        http://scikit-learn.org/stable/modules/svm.html#svm-outlier-detection
+        EXAMPLE:
+        http://scikit-learn.org/stable/auto_examples/covariance/plot_outlier_detection.html#example-covariance-plot-outlier-detection-py
+        '''
 
-
+    def calcualte_EllipticEnvelope(self,store_precision=True, assume_centered=False, support_fraction=None, contamination=0.1, random_state=None):
+        '''
+        http://scikit-learn.org/stable/modules/generated/sklearn.covariance.EllipticEnvelope.html#sklearn.covariance.EllipticEnvelope
+        http://scikit-learn.org/stable/modules/outlier_detection.html#outlier-detection
+        EXAMPLE:
+        http://scikit-learn.org/stable/auto_examples/covariance/plot_outlier_detection.html#example-covariance-plot-outlier-detection-py
+        '''

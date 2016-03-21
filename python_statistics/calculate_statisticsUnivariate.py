@@ -78,16 +78,6 @@ class calculate_statisticsUnivariate(calculate_base):
         '''
         from scipy.special import stdtr
 
-        ## Compute the descriptive statistics of a and b.
-        #abar = a.mean()
-        #avar = a.var(ddof=1)
-        #na = a.size
-        #adof = na - 1
-        #bbar = b.mean()
-        #bvar = b.var(ddof=1)
-        #nb = b.size
-        #bdof = nb - 1
-
         # calculate the size and dofs
         ndata_1 = len(data_1_mean);
         data_1_dof = ndata_1-1;

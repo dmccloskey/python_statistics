@@ -21,6 +21,21 @@ class calculate_pca(calculate_base):
         plt.xlabel("first principal component")
         plt.ylabel("second principal component")
 
+        EXAMPLE: maybe some issues with this code...
+        http://www.analyticsvidhya.com/blog/2015/08/common-machine-learning-algorithms/
+        #Import Library
+        from sklearn import decomposition
+        #Assumed you have training and test data set as train and test
+        # Create PCA obeject
+        k = min(n_sample, n_features)
+        pca = decomposition.PCA(n_components=k) 
+        # For Factor analysis
+        fa= decomposition.FactorAnalysis()
+        # Reduced the dimension of training dataset using PCA
+        train_reduced = pca.fit_transform(train)
+        #Reduced the dimension of test dataset
+        test_reduced = pca.transform(test)
+
         '''
         pass;
 

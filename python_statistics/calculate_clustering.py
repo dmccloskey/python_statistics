@@ -1,5 +1,10 @@
 from .calculate_dependencies import *
 from .calculate_base import calculate_base
+
+from time import time
+from sklearn import metrics
+from sklearn.cluster import MiniBatchKMeans, KMeans
+
 class calculate_clustering(calculate_base):
     # heatmap
     def calculate_heatmap(self,data_I,row_labels_I,column_labels_I,
@@ -105,10 +110,13 @@ class calculate_clustering(calculate_base):
         sklearn.cluster.Ward: 
         Ward implements hierarchical clustering based on the Ward algorithm, a variance-minimizing approach. At each step, it minimizes the sum of squared differences within all clusters (inertia criterion).
         '''
+
+        # Generate sample data
+        np.random.seed(0);
         pass;
 
     #k-means
-    def calculate_kmeans(self):
+    def calculate_KMeans(self,data_I,n_clusters=8, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto', verbose=0, random_state=None, copy_x=True, n_jobs=1):
         '''calculate the kmeans clusters
         sklearn.cluster.k_means(X, n_clusters, init='k-means++', precompute_distances='auto', n_init=10, max_iter=300, verbose=False, tol=0.0001, random_state=None, copy_x=True, n_jobs=1, return_n_iter=False)
         
@@ -125,8 +133,61 @@ class calculate_clustering(calculate_base):
         labels = kmeans.fit_predict(X)
 
         plt.scatter(X[:, 0], X[:, 1], c=labels)
+
+        E.G. http://scikit-learn.org/stable/auto_examples/cluster/plot_mini_batch_kmeans.html#example-cluster-plot-mini-batch-kmeans-py
         '''
         pass
+    def calculate_MiniBatchKMeans(self,data_I,
+                n_clusters=8, init='k-means++',
+                max_iter=100, batch_size=100,
+                verbose=0, compute_labels=True,
+                random_state=None, tol=0.0,
+                max_no_improvement=10, init_size=None,
+                n_init=3, reassignment_ratio=0.01
+                ):
+        '''calculate MiniBatchKMeans clusters
+        http://scikit-learn.org/stable/modules/generated/sklearn.cluster.MiniBatchKMeans.html#sklearn.cluster.MiniBatchKMeans.fit
+        EXAMPLE:
+        mbk = MiniBatchKMeans(init='k-means++', n_clusters=3, batch_size=batch_size,
+                      n_init=10, max_no_improvement=10, verbose=0)
+        t0 = time.time()
+        mbk.fit(X) where X : array-like, shape = [n_samples, n_features]
+        t_mini_batch = time.time() - t0
+        mbk_means_labels = mbk.labels_
+        mbk_means_cluster_centers = mbk.cluster_centers_
+        mbk_means_labels_unique = np.unique(mbk_means_labels)
+
+        ax = fig.add_subplot(1, 3, 2)
+        for k, col in zip(range(n_clusters), colors):
+            my_members = mbk_means_labels == order[k]
+            cluster_center = mbk_means_cluster_centers[order[k]]
+            ax.plot(X[my_members, 0], X[my_members, 1], 'w',
+                    markerfacecolor=col, marker='.')
+            ax.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col,
+                    markeredgecolor='k', markersize=6)
+        ax.set_title('MiniBatchKMeans')
+        ax.set_xticks(())
+        ax.set_yticks(())
+        plt.text(-3.5, 1.8, 'train time: %.2fs\ninertia: %f' %
+                 (t_mini_batch, mbk.inertia_))
+
+        http://scikit-learn.org/stable/auto_examples/cluster/plot_mini_batch_kmeans.html#example-cluster-plot-mini-batch-kmeans-py
+        '''
+
+        mbk = MiniBatchKMeans(
+                n_clusters=n_clusters, init=init,
+                max_iter=max_iter, batch_size=batch_size,
+                verbose=verbose, compute_labels=compute_labels,
+                random_state=random_state, tol=tol,
+                max_no_improvement=max_no_improvement, init_size=init_size,
+                n_init=n_init, reassignment_ratio=reassignment_ratio)
+        t0 = time.time()
+        mbk.fit(data_I)
+        t_mini_batch = time.time() - t0
+        mbk_means_labels = mbk.labels_
+        mbk_means_cluster_centers = mbk.cluster_centers_
+        mbk_means_labels_unique = np.unique(mbk_means_labels);
+        return mbk_means_labels,mbk_means_cluster_centers,mbk_means_labels_unique;
 
     def score_clusters(self,data_I,labels_I,metric_I):
         '''Score the clustering algorithm
@@ -137,4 +198,32 @@ class calculate_clustering(calculate_base):
         
         '''
 
+    def bench_k_means(estimator, name, data):
+        '''
+        benchmark kmeans
+        http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_digits.html#example-cluster-plot-kmeans-digits-py
+        INPUT:
+        OUTPUT:
+        EXAMPLE:
+        bench_k_means(KMeans(init='k-means++', n_clusters=n_digits, n_init=10),
+              name="k-means++", data=data)
+              '''
+        t0 = time()
+        estimator.fit(data)
+        print('% 9s   %.2fs    %i   %.3f   %.3f   %.3f   %.3f   %.3f    %.3f'
+              % (name, (time() - t0), estimator.inertia_,
+                 metrics.homogeneity_score(labels, estimator.labels_),
+                 metrics.completeness_score(labels, estimator.labels_),
+                 metrics.v_measure_score(labels, estimator.labels_),
+                 metrics.adjusted_rand_score(labels, estimator.labels_),
+                 metrics.adjusted_mutual_info_score(labels,  estimator.labels_),
+                 metrics.silhouette_score(data, estimator.labels_,
+                                          metric='euclidean',
+                                          sample_size=sample_size)))
+
+        bench_k_means(KMeans(init='k-means++', n_clusters=n_digits, n_init=10),
+                        name="k-means++", data=data)
+
+        bench_k_means(KMeans(init='random', n_clusters=n_digits, n_init=10),
+                        name="random", data=data)
     #SOM
