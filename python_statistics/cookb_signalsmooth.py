@@ -33,7 +33,7 @@ def smooth(x, window_len=10, window='hanning'):
     
     see also: 
     
-    numpy.hanning, numpy.hamming, numpy.bartlett, numpy.blackman, numpy.convolve
+    np.hanning, np.hamming, np.bartlett, np.blackman, np.convolve
     scipy.signal.lfilter
  
     TODO: the window parameter could be the window itself if an array instead of a string   

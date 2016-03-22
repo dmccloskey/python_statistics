@@ -33,7 +33,7 @@ class calculate_histogram(calculate_base):
         else:
             n_bins = n_bins_I;
 
-        hist = numpy.histogram(data_I,n_bins);
+        hist = np.histogram(data_I,n_bins);
         y_O = hist[0];
         edges = hist[1];
 
@@ -52,7 +52,7 @@ class calculate_histogram(calculate_base):
             min_point = min(data_I);
             max_point = max(data_I);
 
-        x_grid = numpy.linspace(min_point, max_point, 1000)
+        x_grid = np.linspace(min_point, max_point, 1000)
         try:
             kde_scipy=scipy.stats.gaussian_kde(data_I, bw_method=bandwidth_I);
         except RuntimeError as e:

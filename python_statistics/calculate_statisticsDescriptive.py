@@ -13,25 +13,25 @@ class calculate_statisticsDescriptive(calculate_base):
             data_ave_O = 0.0
             # calculate the average of the sample
             for c in data_I:
-                data_ave_O += numpy.log(c);
-            data_ave_O = numpy.exp(data_ave_O/len(data_I));
+                data_ave_O += np.log(c);
+            data_ave_O = np.exp(data_ave_O/len(data_I));
 
             data_var_O = 0.0
             #calculate the variance of the sample
             for c in data_I:
-                data_var_O += numpy.power(numpy.log(c/data_ave_O),2);
+                data_var_O += np.power(np.log(c/data_ave_O),2);
             data_var_O = data_var_O/(len(data_I)-1); #note: we will need to take the exp()
                                                      # to get the final variance
                                                      # but leaving it this way makes the
                                                      # downstream calculations simpler
 
             #calculate the 95% confidence intervals
-            data_se = numpy.sqrt(data_var_O/len(data_I));
-            data_lb_O = numpy.exp(numpy.log(data_ave_O) - 1.96*data_se);
-            data_ub_O = numpy.exp(numpy.log(data_ave_O) + 1.96*data_se);
+            data_se = np.sqrt(data_var_O/len(data_I));
+            data_lb_O = np.exp(np.log(data_ave_O) - 1.96*data_se);
+            data_ub_O = np.exp(np.log(data_ave_O) + 1.96*data_se);
             
             #correct the variance for use in reporting
-            data_var_O = numpy.exp(data_var_O);
+            data_var_O = np.exp(data_var_O);
 
             return data_ave_O, data_var_O, data_lb_O, data_ub_O;
         except Exception as e:
@@ -43,15 +43,15 @@ class calculate_statisticsDescriptive(calculate_base):
         with 95% confidence intervals"""
 
         try:
-            data = numpy.array(data_I);
+            data = np.array(data_I);
 
             data_ave_O = 0.0
             # calculate the average of the sample
-            data_ave_O = numpy.mean(data);
+            data_ave_O = np.mean(data);
 
             data_var_O = 0.0
             #calculate the variance of the sample
-            data_var_O = numpy.var(data);
+            data_var_O = np.var(data);
 
             #calculate the standard error of the sample
             se = scipy.stats.sem(data)
@@ -72,15 +72,15 @@ class calculate_statisticsDescriptive(calculate_base):
         with 95% confidence intervals"""
 
         try:
-            data = numpy.array(data_I);
+            data = np.array(data_I);
 
             data_ave_O = 0.0
             # calculate the average of the sample
-            data_ave_O = numpy.mean(data);
+            data_ave_O = np.mean(data);
 
             data_var_O = 0.0
             #calculate the variance of the sample
-            data_var_O = numpy.var(data);
+            data_var_O = np.var(data);
 
             #calculate the standard error of the sample
             se = scipy.stats.sem(data)
@@ -88,7 +88,7 @@ class calculate_statisticsDescriptive(calculate_base):
             #calculate the CV% of the sample
             data_cv_O = 0.0;
             if data_ave_O !=0.0:
-                data_cv_O = numpy.std(data)/data_ave_O*100;
+                data_cv_O = np.std(data)/data_ave_O*100;
 
             #calculate the 95% confidence intervals
             n = len(data);
@@ -124,10 +124,10 @@ class calculate_statisticsDescriptive(calculate_base):
     def calculate_interquartiles(self,data_I,iq_range_I = [25,75]):
         '''compute the interquartiles and return the min, max, median, iq1 and iq3'''
 
-        min_O = numpy.min(data_I);
-        max_O = numpy.max(data_I);
-        iq_1_O, iq_2_O = numpy.percentile(data_I, iq_range_I)
-        median_O = numpy.median(data_I);
+        min_O = np.min(data_I);
+        max_O = np.max(data_I);
+        iq_1_O, iq_2_O = np.percentile(data_I, iq_range_I)
+        median_O = np.median(data_I);
 
         return min_O, max_O, median_O, iq_1_O, iq_2_O;
     # calculate the fold change
@@ -164,9 +164,9 @@ class calculate_statisticsDescriptive(calculate_base):
         if type_I == 'relative':
             fold_change_O = data_2/data_1;
         elif type_I == 'absolute':
-            fold_change_O = numpy.abs(data_2/data_1);
+            fold_change_O = np.abs(data_2/data_1);
         elif type_I == 'geometric':
-            fold_change_O = numpy.log(numpy.exp(data_2)/numpy.exp(data_1));
+            fold_change_O = np.log(np.exp(data_2)/np.exp(data_1));
         else:
             fold_change_O = data_2/data_1;
             print("type_I not recognized.  Relative type will be applied as default.");
@@ -174,7 +174,7 @@ class calculate_statisticsDescriptive(calculate_base):
         supported_scale_fold_change = ["log2","log10","ln","abs","sqrt"]
         if scale_fold_change_I and scale_fold_change_I == "log2":
             fold_change_O = self.scale_values(fold_change_O,scale_fold_change_I);
-            fold_change_O = numpy.sqrt(fold_change_O);
+            fold_change_O = np.sqrt(fold_change_O);
         elif scale_fold_change_I:
             print("scale_fold_change_I not recognized.  No scaling will be applied.");
             fold_change_O = fold_change_O; 
@@ -191,23 +191,23 @@ class calculate_statisticsDescriptive(calculate_base):
         '''
         data_O = None;
         if scale_I == "log2":
-            data_O = numpy.log2(data_1_I);
+            data_O = np.log2(data_1_I);
         elif scale_I == "log10":
-            data_O = numpy.log10(data_1_I);
+            data_O = np.log10(data_1_I);
         elif scale_I == "ln":
-            data_O = numpy.log(data_1_I);
+            data_O = np.log(data_1_I);
         elif scale_I == "abs":
-            data_O = numpy.abs(data_1_I);
+            data_O = np.abs(data_1_I);
         elif scale_I == "exp":
-            data_O = numpy.exp(data_1_I);
+            data_O = np.exp(data_1_I);
         elif scale_I == "exp2":
-            data_O = numpy.exp2(data_1_I);
+            data_O = np.exp2(data_1_I);
         elif scale_I == "^10":
-            data_O = numpy.power(data_1_I,10);
+            data_O = np.power(data_1_I,10);
         elif scale_I == "^2":
-            data_O = numpy.power(data_1_I,2);
+            data_O = np.power(data_1_I,2);
         elif scale_I == "sqrt":
-            data_O = numpy.sqrt(data_1_I);
+            data_O = np.sqrt(data_1_I);
         elif scale_I:
             print("scale_I not recognized.  No scaling will be applied.");
             data_O = data_1_I;
@@ -231,29 +231,29 @@ class calculate_statisticsDescriptive(calculate_base):
             print("bad data provided!");
             return None;
         if scale_values_I and scale_values_I == "log2":
-            data_1 = numpy.log2(data_1_I);
-            data_2 = numpy.log2(data_2_I);
+            data_1 = np.log2(data_1_I);
+            data_2 = np.log2(data_2_I);
         elif scale_values_I and scale_values_I == "log10":
-            data_1 = numpy.log10(data_1_I);
-            data_2 = numpy.log10(data_2_I);
+            data_1 = np.log10(data_1_I);
+            data_2 = np.log10(data_2_I);
         elif scale_values_I and scale_values_I == "ln":
-            data_1 = numpy.log(data_1_I);
-            data_2 = numpy.log(data_2_I);
+            data_1 = np.log(data_1_I);
+            data_2 = np.log(data_2_I);
         elif scale_values_I and scale_values_I == "abs":
-            data_1 = numpy.abs(data_1_I);
-            data_2 = numpy.abs(data_2_I);
+            data_1 = np.abs(data_1_I);
+            data_2 = np.abs(data_2_I);
         elif scale_values_I and scale_values_I == "exp":
-            data_1 = numpy.exp(data_1_I);
-            data_2 = numpy.exp(data_2_I);
+            data_1 = np.exp(data_1_I);
+            data_2 = np.exp(data_2_I);
         elif scale_values_I and scale_values_I == "exp2":
-            data_1 = numpy.exp2(data_1_I);
-            data_2 = numpy.exp2(data_2_I);
+            data_1 = np.exp2(data_1_I);
+            data_2 = np.exp2(data_2_I);
         elif scale_values_I and scale_values_I == "^10":
-            data_1 = numpy.power(data_1_I,10);
-            data_2 = numpy.power(data_2_I,10);
+            data_1 = np.power(data_1_I,10);
+            data_2 = np.power(data_2_I,10);
         elif scale_values_I and scale_values_I == "^2":
-            data_1 = numpy.power(data_1_I,2);
-            data_2 = numpy.power(data_2_I,2);
+            data_1 = np.power(data_1_I,2);
+            data_2 = np.power(data_2_I,2);
         elif scale_values_I:
             print("scale_values_I not recognized.  No scaling will be applied.");
             data_1 = data_1_I;
@@ -265,23 +265,23 @@ class calculate_statisticsDescriptive(calculate_base):
         if type_I == 'relative':
             difference_O = data_2-data_1;
         elif type_I == 'absolute':
-            difference_O = numpy.abs(data_2-data_1);
+            difference_O = np.abs(data_2-data_1);
         elif type_I == 'geometric': #i.e. distance
-            difference_O = numpy.log(numpy.exp(data_2)+numpy.exp(data_1));
+            difference_O = np.log(np.exp(data_2)+np.exp(data_1));
         else:
             difference_O = data_2-data_1;
             print("type_I not recognized.  Relative type will be applied as default.");
         
         if scale_difference_I and scale_difference_I == "log2":
-            difference_O = numpy.log2(difference_O);
+            difference_O = np.log2(difference_O);
         elif scale_difference_I and scale_difference_I == "log10":
-            difference_O = numpy.log10(difference_O);
+            difference_O = np.log10(difference_O);
         elif scale_difference_I and scale_difference_I == "ln":
-            difference_O = numpy.log(difference_O);
+            difference_O = np.log(difference_O);
         elif scale_difference_I and scale_difference_I == "abs":
-            difference_O = numpy.abs(difference_O);
+            difference_O = np.abs(difference_O);
         elif scale_difference_I and scale_difference_I == "sqrt":
-            difference_O = numpy.sqrt(difference_O);
+            difference_O = np.sqrt(difference_O);
         elif scale_difference_I:
             print("scale_difference_I not recognized.  No scaling will be applied.");
             difference_O = difference_O; 

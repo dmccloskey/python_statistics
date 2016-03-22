@@ -70,7 +70,7 @@ class calculate_curveFitting(calculate_base):
         p4 = slope
         g = # of generations
         '''
-        yg = p1 + (p2-p1)/(1+numpy.exp(p3-g)*p4);
+        yg = p1 + (p2-p1)/(1+np.exp(p3-g)*p4);
         return yg;
 
     def makeParametersFromData_sigmoidalMetabolitesEvolution(self,data_I):
@@ -94,7 +94,7 @@ class calculate_curveFitting(calculate_base):
         k = steepness of the curve
         xo = the x-value of the sigmoid's midpoint
         '''
-        fx = L/(1+numpy.exp(-k*(x-xo)));
+        fx = L/(1+np.exp(-k*(x-xo)));
         return fx;
 
     def fitFunction_logisticGeneralized(self,x,xo,p1,p2,k):
@@ -106,7 +106,7 @@ class calculate_curveFitting(calculate_base):
         k = steepness of the curve
         xo = the x-value of the sigmoid's midpoint
         '''
-        fx = p1 + (p2-p1)/(1+numpy.exp(-k*(x-xo)));
+        fx = p1 + (p2-p1)/(1+np.exp(-k*(x-xo)));
         return fx;
 
     def makeParametersFromData_logisticGeneralized(self,data_I,time_I,index_I):
@@ -133,7 +133,7 @@ class calculate_curveFitting(calculate_base):
         b = is the position of the center of the peak
         c = width of the bell
         '''
-        fx = a*numpy.exp(-(x-b)^2/(2*c^2));
+        fx = a*np.exp(-(x-b)^2/(2*c^2));
         return fx;
 
     def fitFunction_lognormal(self,x,mu,sigma):
@@ -141,9 +141,9 @@ class calculate_curveFitting(calculate_base):
         INPUT:
         
         '''
-        a = 1/(x*sigma*numpy.sqrt(2*numpy.pi));
-        xb = numpy.log(x)-mu;
-        fx = a*numpy.exp(-xb^2/(2*sigma^2));
+        a = 1/(x*sigma*np.sqrt(2*np.pi));
+        xb = np.log(x)-mu;
+        fx = a*np.exp(-xb^2/(2*sigma^2));
         return fx;
 
     def fitFunction_polynomial(self,x):
@@ -180,12 +180,12 @@ class calculate_curveFitting(calculate_base):
         #calculate SSREG,SSTOT,r2
         yhat = fit_I;
         n = len(data_I);
-        ybar = numpy.sum(data_I)/n;
-        ssreg = numpy.sum((yhat-ybar)**2)
-        sstot = numpy.sum((y - ybar)**2)        
+        ybar = np.sum(data_I)/n;
+        ssreg = np.sum((yhat-ybar)**2)
+        sstot = np.sum((y - ybar)**2)        
         r2_O = ssreg/sstot; #check: 1-ssreg/sstot
         #calculate RSE
-        rse_O = numpy.sqrt(1/(n-2)*ssreg);
+        rse_O = np.sqrt(1/(n-2)*ssreg);
         #calculate the correlation coefficient and p-value
         rho_O, pval_O = scipy.stats.pearsonr(yhat,ybar);
 

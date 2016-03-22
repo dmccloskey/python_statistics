@@ -2,9 +2,9 @@ from .calculate_dependencies import *
 from .calculate_base import calculate_base
 
 from sklearn.ensemble import GradientBoostingClassifier
-import xgboost as xgb
+#import xgboost as xgb
 
-class calculate_pca(calculate_base):
+class calculate_boostedModel(calculate_base):
 
     def calculate_GradientBoostingClassifier(self,):
         '''

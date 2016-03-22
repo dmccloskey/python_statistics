@@ -23,7 +23,7 @@ class calculate_smoothingFunctions(calculate_base):
             #tck = splrep(x,y,k=3,task=-1,t=10) #no smoothing factor
             x2 = linspace(min(x),max(x),500)
             y2_spline= splev(x2,tck)
-            y2 = numpy.zeros_like(y2_spline);
+            y2 = np.zeros_like(y2_spline);
             for i,y2s in enumerate(y2_spline):
                 if i==0:
                     y2[i] = y2s;
@@ -33,18 +33,18 @@ class calculate_smoothingFunctions(calculate_base):
                     y2[i] = y2s;
         elif fit_func_I=='movingWindow':
             #moving window filter
-            x2 = numpy.array(x);
-            y2 = smooth(numpy.array(y),window_len=10, window='hanning');
+            x2 = np.array(x);
+            y2 = smooth(np.array(y),window_len=10, window='hanning');
         elif fit_func_I=='legendre':
             #legendre smoothing optimization
             smooth = legendre_smooth(len(x),1,1e-4,25)
-            x2 = numpy.array(x);
-            y2 = smooth.fit(numpy.array(y))
+            x2 = np.array(x);
+            y2 = smooth.fit(np.array(y))
         elif fit_func_I=='lowess':
             #lowess
-            x2 = numpy.array(x);
-            y2_lowess = lowess.lowess(x2,numpy.array(y),f=0.1,iter=100)
-            y2 = numpy.zeros_like(y2_lowess);
+            x2 = np.array(x);
+            y2_lowess = lowess.lowess(x2,np.array(y),f=0.1,iter=100)
+            y2 = np.zeros_like(y2_lowess);
             for i,y2s in enumerate(y2_lowess):
                 if i==0:
                     y2[i] = y2s;

@@ -44,7 +44,7 @@ class calculate_classification(calculate_base):
         EXAMPLE:
         http://www.analyticsvidhya.com/blog/2015/08/common-machine-learning-algorithms/
         #Import Library
-        #Import other necessary libraries like pandas, numpy...
+        #Import other necessary libraries like pandas, np...
         from sklearn import tree
         #Assumed you have, X (predictor) and Y (target) for training data set and x_test(predictor) of test_dataset
         # Create tree object 

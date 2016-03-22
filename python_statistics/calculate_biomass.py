@@ -95,7 +95,7 @@ class calculate_biomass(calculate_base):
         # TODO: implement on a per carbon basis
         if per_carbon_I:
             print('per carbon normaization not yet supported.  No normalization will be applied')
-        yield_ss_O = growthRate_ss_I/numpy.sum(uptakeRate_ss_I);
+        yield_ss_O = growthRate_ss_I/np.sum(uptakeRate_ss_I);
         # determine the units
         if not growthRate_units_I or not uptakeRate_units_I:
             print('no growthRate or no uptakeRate units provided!')
@@ -107,8 +107,8 @@ class calculate_biomass(calculate_base):
     def calculate_growthRate(self,time_I,biomass_I):
         '''calculate exponential growth'''
 
-        x = numpy.array(time_I);
-        y = numpy.log(biomass_I); #weight the biomass by the natural logarithmn
+        x = np.array(time_I);
+        y = np.log(biomass_I); #weight the biomass by the natural logarithmn
 
         slope, intercept, r_value, p_value, std_err = linregress(x,y);
         r2 = r_value**2; #coefficient of determination
@@ -124,8 +124,8 @@ class calculate_biomass(calculate_base):
     def calculate_uptakeAndSecretionRate(self,dcw_I,conc_I,gr_I):
         '''calculate uptake and secretion rates'''
 
-        x = numpy.array(dcw_I);
-        y = numpy.array(conc_I); 
+        x = np.array(dcw_I);
+        y = np.array(conc_I); 
 
         slope, intercept, r_value, p_value, std_err = linregress(x,y);
         r2 = r_value**2; #coefficient of determination

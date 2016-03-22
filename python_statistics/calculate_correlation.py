@@ -94,7 +94,7 @@ class calculate_correlation(calculate_base):
         #        continue;
         #    if criteria_I == 'difference':
         #        difference = d-prev_value;
-        #        if numpy.abs(difference)>tol_I:
+        #        if np.abs(difference)>tol_I:
         #            if difference > 0: prev_profile += 1;
         #            else: prev_profile -= 1;
         #            profile_tmp.append(prev_profile);
@@ -138,7 +138,7 @@ class calculate_correlation(calculate_base):
         #get the distance between the min and max values
         min_val = min(trend_I);
         max_val = max(trend_I);
-        dist = numpy.sqrt(max_val*max_val+min_val*min_val);
+        dist = np.sqrt(max_val*max_val+min_val*min_val);
         dist=int(dist);
 
         #add the distance to each value

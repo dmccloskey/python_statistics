@@ -6,7 +6,7 @@ class calculate_regression(calculate_base):
         EXAMPLE:
         http://www.analyticsvidhya.com/blog/2015/08/common-machine-learning-algorithms/
         #Import Library
-        #Import other necessary libraries like pandas, numpy...
+        #Import other necessary libraries like pandas, np...
         from sklearn import linear_model
         #Load Train and Test datasets
         #Identify feature and response variable(s) and values must be numeric and numpy arrays
