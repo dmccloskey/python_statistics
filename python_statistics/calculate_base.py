@@ -46,8 +46,9 @@ class calculate_base():
 
         self.data = {};
         self.data['data']=self.listDict.get_dataMatrix();
-        self.data['row_labels']=self.listDict.get_rowLabels(row_labels_I);
-        self.data['column_labels']=self.listDict.get_columnLabels(column_labels_I);
+        self.data['row_labels']=self.listDict.get_rowLabels_asTupleArray();
+        self.data['column_labels']=self.listDict.get_columnLabels_asTupleArray();
+        #self.data['column_labels']=self.listDict.get_columnLabels(column_labels_I);
 
     def set_listDict(self,listDict_I):
         self.listDict = listDict_I;
