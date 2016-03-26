@@ -80,6 +80,8 @@ from sklearn.ensemble import GradientBoostingRegressor #Gradient Boosting for re
 from sklearn.ensemble import VotingClassifier #Soft Voting/Majority Rule classifier for unfitted estimators
 
 #Feature Selection
+from sklearn.feature_selection import RFE #Feature ranking with recursive feature elimination.
+from sklearn.feature_selection import RFECV #Feature ranking with recursive feature elimination and cross-validated selection of the best number of features.
 from sklearn.feature_selection import chi2 #Compute chi-squared stats between each non-negative feature and class.
 from sklearn.feature_selection import f_classif #Compute the ANOVA F-value for the provided sample.
 from sklearn.feature_selection import f_regression #Univariate linear regression tests.
@@ -228,9 +230,9 @@ from sklearn.neighbors import KernelDensity #Kernel Density Estimation
 from sklearn.neighbors import kneighbors_graph #Computes the weighted) graph of k-Neighbors for points in X
 from sklearn.neighbors import radius_neighbors_graph #Computes the weighted) graph of Neighbors for points in X
 
-#Neural network models
-from sklearn_theano.feature_extraction import GoogLeNetClassifier
-from sklearn_theano.feature_extraction import OverfeatClassifier
+##Neural network models
+#from sklearn_theano.feature_extraction import GoogLeNetClassifier
+#from sklearn_theano.feature_extraction import OverfeatClassifier
 
 #Cross decomposition
 from sklearn.cross_decomposition import PLSRegression #PLS regression

@@ -1,5 +1,5 @@
 from .calculate_dependencies import *
-from .calculate_dataSplit import calculate_base
+from .calculate_base import calculate_base
 from sklearn.covariance import EmpiricalCovariance, MinCovDet
 class calculate_covariance(calculate_base):
     def make_dataModel_MinCovDet(self,

@@ -22,6 +22,8 @@ class calculate_base():
 
         if data_model_I: self.data_model=data_model_I;
         else: self.data_model = None;
+
+        self.data_featureSelection = None;
         
         if random_state_I:
             npr.seed(random_state_I);
@@ -46,9 +48,43 @@ class calculate_base():
 
         self.data = {};
         self.data['data']=self.listDict.get_dataMatrix();
-        self.data['row_labels']=self.listDict.get_rowLabels_asTupleArray();
-        self.data['column_labels']=self.listDict.get_columnLabels_asTupleArray();
+        #self.data['row_labels']=self.listDict.get_rowLabels_asArray();
+        self.data['row_labels']=self.listDict.get_rowLabels_asDataFrame();
+        self.data['row_indexes']=self.listDict.get_rowLabels_asUniqueIndexes();
+        #self.data['row_labels']=self.listDict.get_rowLabels(row_labels_I);
+        #self.data['column_labels']=self.listDict.get_columnLabels_asArray();
+        self.data['column_labels']=self.listDict.get_columnLabels_asDataFrame();
         #self.data['column_labels']=self.listDict.get_columnLabels(column_labels_I);
+
+    def make_dataFactorFromRowLabels_v1(self,factor_index_I):
+        '''make a data factor array for Row Labels
+        INPUT:
+        factor_index_I = integer to slice out the column of the row labels
+        OUTPUT:
+        array of strings
+        '''
+        factors_O=self.data['row_labels'][:,factor_index_I];
+        return factors_O;
+    
+    def make_dataFactorFromRowLabels(self,factor_label_I):
+        '''make a data factor array for Row Labels
+        INPUT:
+        factor_label_I = label to slice out the column of the row labels
+        OUTPUT:
+        array of strings
+        '''
+        factors_O=self.data['row_labels'][factor_label_I].ravel();
+        return factors_O;
+
+    def make_dataResponseFromRowLabels(self,response_index_I):
+        '''make a data response array
+        INPUT:
+        response_index_I
+        OUTPUT:
+        array of numerical values
+        '''
+        self.data['response']=self.data['row_labels'][:,response_index_I];
+
 
     def set_listDict(self,listDict_I):
         self.listDict = listDict_I;

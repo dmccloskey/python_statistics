@@ -9,8 +9,13 @@ class data_preProcessing(calculate_base):
         pass;
     def centerAndScale_data(self,):
         '''
-        Mean center and UV scale the data
+        Mean center and UV scale the training and test data
         '''
+        #training data
         data_mean = self.data_train['data'].mean(axis=0);
         data_std = self.data_train['data'].std(axis=0);
         self.data_train['data'] = (self.data_train['data'] - data_mean) / data_std;
+        #testing data
+        data_mean = self.data_test['data'].mean(axis=0);
+        data_std = self.data_test['data'].std(axis=0);
+        self.data_test['data'] = (self.data_test['data'] - data_mean) / data_std;

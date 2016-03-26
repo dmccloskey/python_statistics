@@ -1,5 +1,5 @@
 ﻿from .calculate_dependencies import *
-from .calculate_dataSplit import calculate_base
+from .calculate_base import calculate_base
 import itertools
 from listDict.listDict import listDict
 import copy

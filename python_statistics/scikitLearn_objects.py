@@ -3,7 +3,8 @@ from .scikitLearn_dependencies import *
 class scikitLearn_objects():
     def __init__(self):
         self.str2scikitLearnObject_dict = {};
-        
+        self.make_str2scikitLearnObject_dict();
+
     def set_str2scikitLearnObject_dict(self,str2scikitLearnObject_dict_I):
         self.str2scikitLearnObject_dict=str2scikitLearnObject_dict_I;
 
@@ -11,7 +12,7 @@ class scikitLearn_objects():
         return self.str2scikitLearnObject_dict;
 
     def make_str2scikitLearnObject_dict(self):
-        table_ioObject_dict_I = {
+        str2scikitLearnObject_dict_I = {
             #Clustering
             'AffinityPropagation':AffinityPropagation, #Perform Affinity Propagation Clustering of data.
             'AgglomerativeClustering':AgglomerativeClustering, #Agglomerative Clustering
@@ -94,6 +95,8 @@ class scikitLearn_objects():
             'VotingClassifier':VotingClassifier, #Soft Voting/Majority Rule classifier for unfitted estimators
 
             #Feature Selection
+            'RFE':RFE, #Feature ranking with recursive feature elimination.
+            'RFECV':RFECV, #Feature ranking with recursive feature elimination and cross-validated selection of the best number of features.
             'chi2':chi2, #Compute chi-squared stats between each non-negative feature and class.
             'f_classif':f_classif, #Compute the ANOVA F-value for the provided sample.
             'f_regression':f_regression, #Univariate linear regression tests.
@@ -240,9 +243,9 @@ class scikitLearn_objects():
             'kneighbors_graph':kneighbors_graph, #Computes the weighted) graph of k-Neighbors for points in X
             'radius_neighbors_graph':radius_neighbors_graph, #Computes the weighted) graph of Neighbors for points in X
 
-            #Neural network models
-            'GoogLeNetClassifier':GoogLeNetClassifier,
-            'OverfeatClassifier':OverfeatClassifier,
+            ##Neural network models
+            #'GoogLeNetClassifier':GoogLeNetClassifier,
+            #'OverfeatClassifier':OverfeatClassifier,
 
             #Cross decomposition
             'PLSRegression':PLSRegression, #PLS regression
@@ -275,12 +278,12 @@ class scikitLearn_objects():
             'ExtraTreeRegressor':ExtraTreeRegressor, #An extremely randomized tree regressor.
             'export_graphviz':export_graphviz, #Export a decision tree in DOT format from 
             };
-
-    def get_scikitLearnObjectFromStr2scikitLearnObjectDict(self,table_I):
+        self.str2scikitLearnObject_dict=str2scikitLearnObject_dict_I;
+    def get_scikitLearnObjectFromStr2scikitLearnObjectDict(self,object_I):
         '''get the scikit-learn object by name'''
         scikitLearnObject_O = None;
-        if table_I in self.str2scikitLearnObject_dict.keys():
-            scikitLearnObject_O = self.str2scikitLearnObject_dict[table_I];
+        if object_I in self.str2scikitLearnObject_dict.keys():
+            scikitLearnObject_O = self.str2scikitLearnObject_dict[object_I];
         else:
             print('object not found.');
         return scikitLearnObject_O;
