@@ -245,8 +245,21 @@ from sklearn.pipeline import Pipeline #Pipeline of transforms with a final estim
 from sklearn.pipeline import FeatureUnion #Concatenates results of multiple transformer objects.
 
 #Preprocessing and Normalization
+from sklearn.preprocessing import Binarizer #Binarize data (set feature values to 0 or 1) according to a threshold
+from sklearn.preprocessing import FunctionTransformer #Constructs a transformer from an arbitrary callable.
+from sklearn.preprocessing import Imputer #Imputation transformer for completing missing values.
+from sklearn.preprocessing import KernelCenterer #Center a kernel matrix
+from sklearn.preprocessing import LabelBinarizer #Binarize labels in a one-vs-all fashion
+from sklearn.preprocessing import LabelEncoder #Encode labels with value between 0 and n_classes-1.
+from sklearn.preprocessing import MultiLabelBinarizer #Transform between iterable of iterables and a multilabel format
+from sklearn.preprocessing import MaxAbsScaler #Scale each feature by its maximum absolute value.
+from sklearn.preprocessing import MinMaxScaler #Transforms features by scaling each feature to a given range.
+from sklearn.preprocessing import Normalizer #Normalize samples individually to unit norm.
+from sklearn.preprocessing import OneHotEncoder #Encode categorical integer features using a one-hot aka one-of-K scheme.
+from sklearn.preprocessing import PolynomialFeatures #Generate polynomial and interaction features.
+from sklearn.preprocessing import RobustScaler #Scale features using statistics that are robust to outliers.
  # NOTES: with_mean=True,with_std=True equivalent to centering and uv scaling
-from sklearn.preprocessing import scale #Standardize a dataset along any axis
+from sklearn.preprocessing import StandardScaler #Standardize features by removing the mean and scaling to unit variance
 
 #Support Vector Machines
 from sklearn.svm import SVC #C-Support Vector Classification.

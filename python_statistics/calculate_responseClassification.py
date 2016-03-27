@@ -55,7 +55,7 @@ class calculate_responseClassification(calculate_base):
         try:
             if hasattr(data_model, 'predict_proba'):
                 response_values_O = data_model.predict_proba(self.data_train['data']);
-                response_labels_O = pd.Series(self.data_train['response']).unique();
+                response_labels_O = self.get_uniqueResponses();
         except Exception as e:
             if raise_I: raise;
             else: print(e);

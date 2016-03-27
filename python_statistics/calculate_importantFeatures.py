@@ -9,9 +9,11 @@ class calculate_importantFeatures(calculate_base):
         '''
         if data_model_I: data_model=data_model_I;
         else: data_model = self.data_model;
+        data_model = self.get_finalEstimator(data_model);
         important_features_O = None;
         try:
-            important_features_O = data_model.feature_importances_;
+            if hasattr(data_model, "feature_importances_"):
+                important_features_O = data_model.feature_importances_;
         except Exception as e:
             if raise_I: raise;
             else: print(e);
@@ -31,11 +33,16 @@ class calculate_importantFeatures(calculate_base):
         '''
         if data_model_I: data_model=data_model_I;
         else: data_model = self.data_model;
+        data_model = self.get_finalEstimator(data_model);
         n_O,std_O = np.full(important_features_I.shape,0.),np.full(important_features_I.shape,0.);
-        if hasattr(data_model, "estimators_"):
-            std_O = np.std([estimator.feature_importances_ for estimator in data_model.estimators_],
-                 axis=0);
-            n_O = np.full(std_O.shape,len(data_model.estimators_));
+        try:
+            if hasattr(data_model, "estimators_"):
+                std_O = np.std([estimator.feature_importances_ for estimator in data_model.estimators_],
+                        axis=0);
+                n_O = np.full(std_O.shape,len(data_model.estimators_));
+        except Exception as e:
+            if raise_I: raise;
+            else: print(e);
         return n_O,std_O;
 
     def calculate_ZScoreAndPValue(self,value_I,n_I,std_I):
@@ -85,6 +92,7 @@ class calculate_importantFeatures(calculate_base):
         '''
         if data_model_I: data_model=data_model_I;
         else: data_model = self.data_featureSelection;
+        data_model = self.get_finalEstimator(data_model);
         impfeat_values_O,impfeat_scores_O = None,None
         try:
             impfeat_values_O = data_model.ranking_;
@@ -104,6 +112,7 @@ class calculate_importantFeatures(calculate_base):
         '''
         if data_model_I: data_model=data_model_I;
         else: data_model = self.data_model;
+        data_model = self.get_finalEstimator(data_model);
         important_features_O = None;
         try:
             important_features_O = data_model.feature_importances_;

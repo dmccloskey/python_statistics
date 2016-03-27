@@ -258,8 +258,20 @@ class scikitLearn_objects():
             'FeatureUnion':FeatureUnion, #Concatenates results of multiple transformer objects.
 
             #Preprocessing and Normalization
-
-            'scale':scale, #Standardize a dataset along any axis
+            'Binarizer':Binarizer,#Binarize data (set feature values to 0 or 1) according to a threshold
+            'FunctionTransformer':FunctionTransformer,#Constructs a transformer from an arbitrary callable.
+            'Imputer':Imputer,#Imputation transformer for completing missing values.
+            'KernelCenterer':KernelCenterer,#Center a kernel matrix
+            'LabelBinarizer':LabelBinarizer,#Binarize labels in a one-vs-all fashion
+            'LabelEncoder':LabelEncoder,#Encode labels with value between 0 and n_classes-1.
+            'MultiLabelBinarizer':MultiLabelBinarizer,#Transform between iterable of iterables and a multilabel format
+            'MaxAbsScaler':MaxAbsScaler,#Scale each feature by its maximum absolute value.
+            'MinMaxScaler':MinMaxScaler,#Transforms features by scaling each feature to a given range.
+            'Normalizer':Normalizer,#Normalize samples individually to unit norm.
+            'OneHotEncoder':OneHotEncoder,#Encode categorical integer features using a one-hot aka one-of-K scheme.
+            'PolynomialFeatures':PolynomialFeatures,#Generate polynomial and interaction features.
+            'RobustScaler':RobustScaler,#Scale features using statistics that are robust to outliers.
+            'StandardScaler':StandardScaler,#Standardize features by removing the mean and scaling to unit variance
 
             #Support Vector Machines
             'SVC':SVC, #C-Support Vector Classification.

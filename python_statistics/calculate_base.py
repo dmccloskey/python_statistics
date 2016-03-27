@@ -23,6 +23,8 @@ class calculate_base():
         if data_model_I: self.data_model=data_model_I;
         else: self.data_model = None;
 
+        self.data_hyperparameterCV = None;
+
         self.data_featureSelection = None;
         
         if random_state_I:
@@ -85,6 +87,27 @@ class calculate_base():
         '''
         self.data['response']=self.data['row_labels'][:,response_index_I];
 
+    def get_uniqueResponses(self):
+        '''get an arra of unique response in order
+        '''
+        return pd.Series(self.data_train['response']).unique();
+
+    def get_finalEstimator(self,
+            data_model_I,
+            raise_I=False):
+        '''
+        retrieve the final estimator from a pipeline object
+        INPUT:
+        OUTPUT:
+        '''
+        estimator_O = data_model_I;
+        try:
+            if hasattr(data_model_I, "_final_estimator"): #pipeline
+                estimator_O = data_model_I._final_estimator;
+        except Exception as e:
+            if raise_I: raise;
+            else: print(e);
+        return estimator_O;
 
     def set_listDict(self,listDict_I):
         self.listDict = listDict_I;
