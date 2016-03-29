@@ -76,8 +76,8 @@ class calculate_responseClassification(calculate_base):
         response_values_O,response_labels_O = None,None;
         try:
             if hasattr(data_model, 'decision_function'):
-                responses_O = data_model.decision_function(self.data_train['data']);
-
+                response_values_O = data_model.decision_function(self.data_train['data']);
+                response_labels_O = self.data_train['response'];
         except Exception as e:
             if raise_I: raise;
             else: print(e);

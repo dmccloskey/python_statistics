@@ -109,15 +109,21 @@ class calculate_importantFeatures(calculate_base):
         '''
         INPUT:
         data_model_I = support vector machine
+        OUTPUT:
+        coefficients_sum_O = sum of the absolute value of the coefficients
+            for each feature along the n-1 class axis
         '''
         if data_model_I: data_model=data_model_I;
         else: data_model = self.data_model;
         data_model = self.get_finalEstimator(data_model);
-        important_features_O = None;
+        coefficients_n_O,coefficients_sum_O,coefficients_mean_O,coefficients_std_O = None,None,None,None;
         try:
-            important_features_O = data_model.feature_importances_;
+            coefficients_n_O = data_model.coef_.shape[0];
+            coefficients_sum_O = np.abs(data_model.coef_).sum(axis=0);
+            coefficients_mean_O = np.abs(data_model.coef_).mean(axis=0);
+            coefficients_std_O = np.abs(data_model.coef_).std(axis=0);
         except Exception as e:
             if raise_I: raise;
             else: print(e);
-        return important_features_O;
+        return coefficients_n_O,coefficients_sum_O,coefficients_mean_O,coefficients_std_O;
 
