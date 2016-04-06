@@ -210,6 +210,11 @@ from sklearn.metrics import pairwise_distances #Compute the distance matrix from
 from sklearn.metrics import pairwise_distances_argmin #Compute minimum distances between one point and a set of points.
 from sklearn.metrics import pairwise_distances_argmin_min #Compute minimum distances between one point and a set of points.
 
+#Gaussian Mixture Models
+from sklearn.mixture import GMM #Gaussian Mixture Model
+from sklearn.mixture import DPGMM #variational Inference for the Infinite Gaussian Mixture Model.
+from sklearn.mixture import VBGMM #Variational Inference for the Gaussian Mixture Model
+
 #Naive Bayes
 from sklearn.naive_bayes import GaussianNB #Gaussian Naive Bayes (GaussianNB)
 from sklearn.naive_bayes import MultinomialNB #Naive Bayes classifier for multinomial models

@@ -223,6 +223,11 @@ class scikitLearn_objects():
             'pairwise_distances_argmin':pairwise_distances_argmin, #Compute minimum distances between one point and a set of points.
             'pairwise_distances_argmin_min':pairwise_distances_argmin_min, #Compute minimum distances between one point and a set of points.
 
+            #Gaussian Mixture Models
+            'GMM':GMM, #Gaussian Mixture Model
+            'DPGMM':DPGMM, #variational Inference for the Infinite Gaussian Mixture Model.
+            'VBGMM':VBGMM, #Variational Inference for the Gaussian Mixture Model
+
             #Naive Bayes
             'GaussianNB':GaussianNB, #Gaussian Naive Bayes (GaussianNB)
             'MultinomialNB':MultinomialNB, #Naive Bayes classifier for multinomial models
