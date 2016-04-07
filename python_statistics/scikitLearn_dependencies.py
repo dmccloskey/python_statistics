@@ -239,6 +239,12 @@ from sklearn.neighbors import radius_neighbors_graph #Computes the weighted) gra
 #from sklearn_theano.feature_extraction import GoogLeNetClassifier
 #from sklearn_theano.feature_extraction import OverfeatClassifier
 
+#from sknn.mlp import Classifier
+#from sknn.mlp import Regressor
+#from sknn.mlp import Layer
+#from sknn.mlp import MultiLayerPerceptron
+
+
 #Cross decomposition
 from sklearn.cross_decomposition import PLSRegression #PLS regression
 from sklearn.cross_decomposition import PLSCanonical #PLSCanonical implements the 2 blocks canonical PLS of the original Wold algorithm [Tenenhaus 1998] p from 204, referred as PLS-C2A in [Wegelin 2000].

@@ -251,6 +251,11 @@ class scikitLearn_objects():
             ##Neural network models
             #'GoogLeNetClassifier':GoogLeNetClassifier,
             #'OverfeatClassifier':OverfeatClassifier,
+            
+            #'Classifier':Classifier,
+            #'Regressor':Regressor,
+            #'Layer':Layer,
+            #'MultiLayerPerceptron':MultiLayerPerceptron,
 
             #Cross decomposition
             'PLSRegression':PLSRegression, #PLS regression
