@@ -6,12 +6,19 @@ from scipy.cluster.hierarchy import linkage, dendrogram
 from listDict.listDict import listDict
 
 class calculate_heatmap(calculate_base):
-    def __init__(self,heatmap_I=[],dendrogram_col_I=[],dendrogram_row_I=[]):
+    def __init__(self,
+                 listDict_I=None,
+                 data_I = None,
+                 heatmap_I=[],dendrogram_col_I=[],dendrogram_row_I=[]):
         '''
         INPUT:
         heatmap_I = heatmap data
         dendrogram_I = dendrogram data
         '''
+        if listDict_I: self.listDict=listDict_I;
+        else: self.listDict = None;
+        if data_I: self.data=data_I;
+        else: self.data = {};
         if heatmap_I:
             self.heatmap=heatmap_I;
         else:
@@ -26,6 +33,7 @@ class calculate_heatmap(calculate_base):
             self.dendrogram_row = [];
 
     def clear_data(self):
+        self.data = {};
         del self.heatmap[:];
         del self.dendrogram_col[:];
         del self.dendrogram_row[:];
@@ -139,17 +147,39 @@ class calculate_heatmap(calculate_base):
         column_labels_O = column labels of data_O
         '''
         
-        #make the heatmap data matrix
-        listdict = listDict(data_I);
-        data_O,row_labels_unique,column_labels_unique = listdict.convert_listDict2dataMatrix(
-            row_label_I=row_label_I,
-            column_label_I=column_label_I,
-            value_label_I=value_label_I,
-            filter_rows_I=filter_rows_I,
-            filter_columns_I=filter_columns_I,
-            order_rowsFromTemplate_I=order_rowsFromTemplate_I,
-            order_columnsFromTemplate_I=order_columnsFromTemplate_I,
+        #make the listdict
+        data_listDict = listDict(data_I);
+        data_listDict.convert_listDict2DataFrame();
+        value_label = value_label_I;
+        row_labels = [row_label_I];
+        column_labels = [column_label_I];
+
+        #filter in rows/columns
+        if filter_rows_I:
+            data_listDict.filterIn_byDictList({row_label_I:filter_rows_I,
+                                           });
+        if filter_columns_I:
+            data_listDict.filterIn_byDictList({column_label_I:filter_columns_I,
+                                           });
+        
+        #make the pivot table
+        data_listDict.set_pivotTable(
+            value_label_I=value_label,
+            row_labels_I=row_labels,
+            column_labels_I=column_labels
             );
+
+        #sort rows/columns
+        if order_rowsFromTemplate_I:
+            data_listDict.order_indexFromTemplate_pivotTable(template_I=order_rowsFromTemplate_I,axis_I=0);
+        if order_columnsFromTemplate_I:
+            data_listDict.order_indexFromTemplate_pivotTable(template_I=order_columnsFromTemplate_I,axis_I=1);
+        
+        #make the heatmap data matrix
+        data_O = data_listDict.get_dataMatrix();
+        row_labels_unique = data_listDict.get_rowLabels_asArray();
+        column_labels_unique = data_listDict.get_columnLabels_asArray();
+
         #make the heatmap
         heatmap_O,dendrogram_col_O,dendrogram_row_O = self._make_heatmap(data_O,row_labels_unique,column_labels_unique,
             row_pdist_metric_I=row_pdist_metric_I,row_linkage_method_I=row_linkage_method_I,
