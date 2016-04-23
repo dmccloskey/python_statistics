@@ -5,6 +5,8 @@ from time import time
 from sklearn import metrics
 from sklearn.cluster import MiniBatchKMeans, KMeans
 
+import scipy.spatial.distance
+
 class calculate_clustering(calculate_base):
     # heatmap
     def calculate_heatmap(self,data_I,row_labels_I,column_labels_I,
@@ -198,32 +200,89 @@ class calculate_clustering(calculate_base):
         
         '''
 
-    def bench_k_means(estimator, name, data):
+    def benchmark_dataModel(self,
+                data_model_I=None,raise_I=False,
+                metrics_I=[],metric_parameters_I=None):
         '''
-        benchmark kmeans
+        benchmark a scikit learn data model
         http://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_digits.html#example-cluster-plot-kmeans-digits-py
         INPUT:
+        metrics_I = list of metrics
+        metric_parameters_I = list of metric dictionary parameters
         OUTPUT:
         EXAMPLE:
         bench_k_means(KMeans(init='k-means++', n_clusters=n_digits, n_init=10),
               name="k-means++", data=data)
               '''
-        t0 = time()
-        estimator.fit(data)
-        print('% 9s   %.2fs    %i   %.3f   %.3f   %.3f   %.3f   %.3f    %.3f'
-              % (name, (time() - t0), estimator.inertia_,
-                 metrics.homogeneity_score(labels, estimator.labels_),
-                 metrics.completeness_score(labels, estimator.labels_),
-                 metrics.v_measure_score(labels, estimator.labels_),
-                 metrics.adjusted_rand_score(labels, estimator.labels_),
-                 metrics.adjusted_mutual_info_score(labels,  estimator.labels_),
-                 metrics.silhouette_score(data, estimator.labels_,
-                                          metric='euclidean',
-                                          sample_size=sample_size)))
+        metrics_O = {};
 
-        bench_k_means(KMeans(init='k-means++', n_clusters=n_digits, n_init=10),
-                        name="k-means++", data=data)
+        if data_model_I: data_model=data_model_I;
+        else: data_model = self.data_model;
+        data_model = self.get_finalEstimator(data_model);
 
-        bench_k_means(KMeans(init='random', n_clusters=n_digits, n_init=10),
-                        name="random", data=data)
+        y_predicted=None;
+        try:
+            if hasattr(data_model, 'labels_'):
+                y_predicted = data_model.labels_.astype(np.int)
+            else:
+                y_predicted = data_model.predict(X)
+            for i,metric in enumerate(metrics_I):
+                model_obj = scikitLearn_obj.get_scikitLearnObjectFromStr2scikitLearnObjectDict(metric);
+                metric_O = model_object(self.data_train['response'], y_predicted,**metric_parameters_I[i])
+                metrics_O[metric]=metric_O;
+            return metrics_O;
+        except Exception as e:
+            if raise_I: raise;
+            else: print(e);
+
     #SOM
+
+    #gap statistic
+    # gap.py
+
+    def calculate_gapStatistic(data, refs=None, nrefs=20, ks=range(1,11)):
+        """
+        Compute the Gap statistic for an nxm dataset in data.
+        Either give a precomputed set of reference distributions in refs as an (n,m,k) scipy array,
+        or state the number k of reference distributions in nrefs for automatic generation with a
+        uniformed distribution within the bounding box of data.
+        Give the list of k-values for which you want to compute the statistic in ks.
+        """
+    
+        # (c) 2013 Mikael Vejdemo-Johansson
+        # BSD License
+        #
+        # SciPy function to compute the gap statistic for evaluating k-means clustering.
+        # Gap statistic defined in
+        # Tibshirani, Walther, Hastie:
+        #  Estimating the number of clusters in a data set via the gap statistic
+        #  J. R. Statist. Soc. B (2001) 63, Part 2, pp 411-423
+
+        import scipy
+        #import scipy.cluster.vq
+        #TODO: change to KMeans (scikit-learn)
+        shape = data.shape
+        if refs==None:
+            tops = data.max(axis=0)
+            bots = data.min(axis=0)
+            dists = scipy.matrix(scipy.diag(tops-bots))
+            rands = scipy.random.random_sample(size=(shape[0],shape[1],nrefs))
+            for i in range(nrefs):
+                rands[:,:,i] = rands[:,:,i]*dists+bots
+        else:
+            rands = refs
+
+        gaps = scipy.zeros((len(ks),))
+        for (i,k) in enumerate(ks):
+            #(kmc,kml) = scipy.cluster.vq.kmeans2(data, k)
+            #TODO: change to KMeans (scikit-learn)
+            disp = sum([scipy.spatial.distance.euclidean(data[m,:],kmc[kml[m],:]) for m in range(shape[0])])
+
+            refdisps = scipy.zeros((rands.shape[2],))
+            for j in range(rands.shape[2]):
+                #(kmc,kml) = scipy.cluster.vq.kmeans2(rands[:,:,j], k)
+                #TODO: change to KMeans (scikit-learn)
+                refdisps[j] = sum([scipy.spatial.distance.euclidean(rands[m,:,j],kmc[kml[m],:]) for m in range(shape[0])])
+            gaps[i] = scipy.log(scipy.mean(refdisps))-scipy.log(disp)
+           #gaps[i] = scipy.mean(scipy.log(refdisps))-scipy.log(disp) #ERROR?
+        return gaps;

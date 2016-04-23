@@ -1,5 +1,8 @@
 ﻿from .calculate_dependencies import *
 from .calculate_base import calculate_base
+
+#TODO: implement statsmodels to correct pvalue, calculate anova, etc.,
+
 class calculate_statisticsUnivariate(calculate_base):
 
     def calculate_pValueCorrected(self,pvalue_I,alpha,method):
