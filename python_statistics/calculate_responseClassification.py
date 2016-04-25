@@ -82,3 +82,46 @@ class calculate_responseClassification(calculate_base):
             if raise_I: raise;
             else: print(e);
         return response_values_O,response_labels_O;
+
+    def extract_clusterLabels(self,
+        data_model_I=None,
+        raise_I=False):
+        '''
+        extract cluster labels
+        INPUT:
+        data_model_I = of type cluster
+
+        '''
+        if data_model_I: data_model=data_model_I;
+        else: data_model = self.data_model;
+        response_values_O,response_labels_O = None,None;
+        try:
+            if hasattr(data_model, 'labels_'):
+                response_values_O = data_model.labels_.astype(np.int)
+            else:
+                response_values_O = data_model.predict(self.data_train['data']);
+            response_labels_O = self.data_train['response']; #CHECK: self.get_uniqueResponses();
+        except Exception as e:
+            if raise_I: raise;
+            else: print(e);
+        return response_values_O,response_labels_O;
+
+    def extract_clusterCenters(self,
+        data_model_I=None,
+        raise_I=False):
+        '''
+        INPUT:
+        data_model_I = of type cluster
+        '
+
+        '''
+        if data_model_I: data_model=data_model_I;
+        else: data_model = self.data_model;
+        centers_O = None;
+        try:
+            if hasattr(data_model, 'cluster_centers_'):
+                centers_O = data_model.cluster_centers_;
+        except Exception as e:
+            if raise_I: raise;
+            else: print(e);
+        return centers_O;

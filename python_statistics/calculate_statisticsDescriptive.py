@@ -66,7 +66,7 @@ class calculate_statisticsDescriptive(calculate_base):
         except Exception as e:
             print(e);
             exit(-1);
-    # calculate the mean and CV:
+    # calculate the mean and CV: 
     def calculate_ave_var_cv(self,data_I,confidence_I = 0.95):
         """calculate the average, var, %cv of data
         with 95% confidence intervals"""
@@ -226,7 +226,9 @@ class calculate_statisticsDescriptive(calculate_base):
         scale_difference_I = string factor to scale the fold change by
         """
         if data_1_I and data_2_I:
-            difference_O = 0.0;
+            difference_O = np.array(0.0);
+            data_1_I = np.array(data_1_I);
+            data_2_I = np.array(data_2_I);
         else:
             print("bad data provided!");
             return None;
@@ -287,7 +289,11 @@ class calculate_statisticsDescriptive(calculate_base):
             difference_O = difference_O; 
         else:
             difference_O = difference_O;
-        return difference_O;
+
+        if len(data_1_I)==1:
+            return difference_O[0];
+        else:
+            return difference_O;
 
     def calculate_descriptiveStats(self,
                 data_I,
@@ -310,8 +316,8 @@ class calculate_statisticsDescriptive(calculate_base):
             'iq_1'
             'iq_3'
         '''
-        mean,var,cv,lb,ub = self.calculate_ave_var_cv(data_I);
-        min, max, median, iq_1, iq_3 = self.calculate_interquartiles(data_I);
+        mean,var,cv,lb,ub = self.calculate_ave_var_cv(data_I,confidence_I =confidence_I);
+        min, max, median, iq_1, iq_3 = self.calculate_interquartiles(data_I,iq_range_I=iq_range_I);
         descriptiveStats_O = {
             'mean':mean,
             'var':var,
