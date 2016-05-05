@@ -3,7 +3,7 @@ from .calculate_base import calculate_base
 
 class calculate_enrichment(calculate_base):
     
-    def calculate_enrichment(self,enrichment_class_matrix_I, components_I):
+    def calculate_enrichment_hypergeometric(self,enrichment_class_matrix_I, components_I):
         """Calculate hypergoemotric enrichment of the set for each class
 
         The pathway matrix should have class in rows and components in columns
