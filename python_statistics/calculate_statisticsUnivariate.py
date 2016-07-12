@@ -1,10 +1,8 @@
 ﻿from .calculate_dependencies import *
 from .calculate_base import calculate_base
 
-#TODO: implement statsmodels to correct pvalue, calculate anova, etc.,
-
 class calculate_statisticsUnivariate(calculate_base):
-
+    #TODO: implement statsmodels to correct pvalue, calculate anova, etc.,
     def calculate_pValueCorrected(self,pvalue_I,alpha,method):
         '''calculate the corrected p-value
         INPUT:
@@ -20,14 +18,13 @@ class calculate_statisticsUnivariate(calculate_base):
         pvalue_corrected_O = pvalue_I;
         #adjust the p-value
         return pvalue_corrected_O;
-
     def calculate_anova(self):
         '''Perform ANOVA
         scipy.stats.f_oneway(*args)
         scipy.stats.f
         '''
         pass;
-
+    # statistics from replicates
     def calculate_oneSampleTTest(self,data_1,pop_mean_I=0.0):
         '''Calculate the 1-sample t-test on a data set
         INPUT:
@@ -39,7 +36,6 @@ class calculate_statisticsUnivariate(calculate_base):
         '''
         tstat_O,pval_O = scipy.stats.ttest_1samp(data_1,pop_mean_I);
         return tstat_O,pval_O;
-
     def calculate_twoSampleTTest(self,data_1,data_2,equal_var_I = False):
         '''Calculate the independent 2-way t-test on two data sets
         INPUT:
@@ -52,7 +48,6 @@ class calculate_statisticsUnivariate(calculate_base):
         '''
         tstat_O,pval_O = scipy.stats.ttest_ind(data_1,data_2, equal_var = equal_var_I);
         return tstat_O,pval_O;
-
     def calculate_pairwiseTTest(self,data_1,data_2):
         '''Calculate the pairwise 2-way t-test on two data sets
         INPUT:
@@ -64,7 +59,7 @@ class calculate_statisticsUnivariate(calculate_base):
         '''
         tstat_O,pval_O = scipy.stats.ttest_rel(data_1,data_2);
         return tstat_O,pval_O;
-
+    # statistics from descriptive statistics
     def calculate_twoSampleTTest_descriptiveStats(self,
                     data_1_mean,data_1_var,
                     data_2_mean,data_2_var):
@@ -81,6 +76,7 @@ class calculate_statisticsUnivariate(calculate_base):
         '''
         from scipy.special import stdtr
 
+        #TODO: ndata should be input?
         # calculate the size and dofs
         ndata_1 = len(data_1_mean);
         data_1_dof = ndata_1-1;
@@ -92,7 +88,6 @@ class calculate_statisticsUnivariate(calculate_base):
         dof = (data_1_var/ndata_1+ data_2_var/ndata_2)**2 / (data_1_var**2/(ndata_1**2*data_1_dof) + data_2_var**2/(ndata_2**2*data_2_dof));
         pval_O = 2*stdtr(dof, -np.abs(tf));
         return tstat_O,pval_O;
-
     def calculate_oneSampleTTest_descriptiveStats(self,
                     data_1_mean,data_1_var,pop_mean_I=0.0):
         '''Calculate the independent 2-way t-test on one data set
@@ -106,7 +101,8 @@ class calculate_statisticsUnivariate(calculate_base):
         pval_O
         '''
         from scipy.special import stdtr
-
+        
+        #TODO: ndata should be input?
         # calculate the size and dofs
         ndata_1 = len(data_1_mean);
         data_1_dof = ndata_1-2;

@@ -2,7 +2,6 @@
 from .calculate_base import calculate_base
 class calculate_statisticsDescriptive(calculate_base):
 
-    # statistical analysis
     # calculate the geometric mean and variance:
     def calculate_ave_var_geometric(self,data_I):
         """ calculate the geometric average and var of data
@@ -119,6 +118,42 @@ class calculate_statisticsDescriptive(calculate_base):
         except Exception as e:
             print(e);
             exit(-1);
+    def convert_ci2StDev(self,lb_I,ub_I,n_I,alpha_I,distribution_I='lognorm',dist_params_I={},raise_I = False):
+        '''
+        Convert confidence intervals to standard deviation
+
+        Args:
+            lb_I = float, lower bound
+            ub_I = float, upper bound
+            n_I = int, number of replicates
+            alpha_I = float, significance level
+            distribution_I = string, scipy distribution function
+            dist_params_I = distribution function parameters
+
+        Returns:
+            stdev_O = float
+
+        Notes:
+            see http://docs.scipy.org/doc/scipy/reference/stats.html
+            for a list of distributions and parameters
+
+            alpha must be included in the dist_params_I dictionary
+            based on the name given for the particular function
+        '''
+        
+        from scipy import stats
+
+        stdev_O = None;
+        try:
+            if hasattr(stats, distribution_I):
+                distribution_func = getattr(stats, distribution_I);
+                stderr = (ub_I-lb_I)/(2*distribution_func.isf(**dist_params_I));
+                stdev_O = np.sqrt(n_I)*stderr;
+            else: print('scipy.stats does not support ' + distribution_I);
+        except Exception as e:
+            if raise_I: raise;
+            else: print(e);
+        return stdev_O;
 
     # calculate the interquartiles
     def calculate_interquartiles(self,data_I,iq_range_I = [25,75]):
@@ -174,12 +209,14 @@ class calculate_statisticsDescriptive(calculate_base):
         supported_scale_fold_change = ["log2","log10","ln","abs","sqrt"]
         if scale_fold_change_I and scale_fold_change_I == "log2":
             fold_change_O = self.scale_values(fold_change_O,scale_fold_change_I);
-            fold_change_O = np.sqrt(fold_change_O);
         elif scale_fold_change_I:
             print("scale_fold_change_I not recognized.  No scaling will be applied.");
             fold_change_O = fold_change_O; 
         else:
             fold_change_O = fold_change_O;
+        #check for nan
+        if np.isnan(fold_change_O):
+            fold_change_O = 0.0;
         return fold_change_O;
     def scale_values(self,data_1_I,scale_I=None):
         '''Scale values

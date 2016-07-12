@@ -185,3 +185,115 @@ class calculate_heatmap(calculate_base):
             row_pdist_metric_I=row_pdist_metric_I,row_linkage_method_I=row_linkage_method_I,
             col_pdist_metric_I=col_pdist_metric_I,col_linkage_method_I=col_linkage_method_I);
         return heatmap_O,dendrogram_col_O,dendrogram_row_O;
+
+    def convert_idCoord2NodeDistance_dendrogramCol(self):
+        '''
+        '''
+
+        icoord,dcoord,colors,leaves,ivl=self.dendrogram_col['icoord'],\
+            self.dendrogram_col['dcoord'],\
+            self.dendrogram_col['colors'],\
+            self.dendrogram_col['leaves'],\
+            self.dendrogram_col['ivl'];
+        nodes_O = self.convert_idCoord2NodeDistance(
+            icoord,dcoord,colors,leaves,ivl
+            );
+        return nodes_O;
+
+    def convert_idCoord2NodeDistance_dendrogramRow(self):
+        '''
+        '''
+
+        icoord,dcoord,colors,leaves,ivl=self.dendrogram_row['icoord'],\
+            self.dendrogram_row['dcoord'],\
+            self.dendrogram_row['colors'],\
+            self.dendrogram_row['leaves'],\
+            self.dendrogram_row['ivl'];
+        nodes_O = self.convert_idCoord2NodeDistance(
+            icoord,dcoord,colors,leaves,ivl
+            );
+        return nodes_O;
+
+    def convert_idCoord2NodeDistance(self,
+        icoord_I,dcoord_I,colors_I,leaves_I,ivl_I,
+        convert_colors_hex_I = True
+        ):
+        '''convert i/dcoord to nodes and distances
+        '''
+        #matplotlib colors
+        #b: blue
+        #g: green
+        #r: red
+        #c: cyan
+        #m: magenta
+        #y: yellow
+        #k: black
+        #w: white
+        colors_hex_conv = {'b':'#0000CC',
+                           'r':'#CC0000',
+                           'g':'#009900',
+                           'm':'#6600CC',
+                           'c':'#00CCCC',
+                           'y':'#FFFF00',
+                           'k':'#000000',
+                           'w':'FFFFFF',}
+
+        nodes_O = [];
+        leaf_cnt = 0;
+        parents = [];
+        names = [];
+        for icoord_cnt, icoord in enumerate(icoord_I):
+            # calculate the distance
+            distance1 = np.abs(dcoord_I[icoord_cnt][1]-dcoord_I[icoord_cnt][0]);
+            distance2 = np.abs(dcoord_I[icoord_cnt][3]-dcoord_I[icoord_cnt][2]);
+            distances = [distance1,distance2]
+            # store the unique icoord
+            icoord1 = icoord[0];
+            icoord2 = icoord[2];
+            assert(icoord1!=icoord2); # check that the order is valid
+            icoords = [icoord1,icoord2];
+            dcoords = [[dcoord_I[icoord_cnt][1],dcoord_I[icoord_cnt][0]],[dcoord_I[icoord_cnt][3],dcoord_I[icoord_cnt][2]]]
+            # record the nodes
+            for link in range(len(icoords)):
+                tmp={};
+                tmp['idcoord_index'] = icoord_cnt;
+                tmp['length'] = distances[link];
+                if convert_colors_hex_I: tmp['color'] = colors_hex_conv[colors_I[icoord_cnt]]
+                else: tmp['color'] = colors_I[icoord_cnt];
+                p1_index = dcoord_I[icoord_cnt].index(max(dcoord_I[icoord_cnt]))
+
+                #p1_str = str(icoord[p1_index]);
+                #p2_str = str(max(dcoord_I[icoord_cnt]));
+                #tmp['parent'] = '%s-%s'%(p1_str,p2_str);
+
+                tmp['parent'] = str(np.round(np.mean(icoords),3));
+                # check for an original observation
+                if 0 in dcoords[link]:
+                    tmp['name'] = ivl_I[leaf_cnt];
+                    leaf_cnt+=1;
+                else:
+                    tmp['name'] = str(np.round(icoords[link],3));
+                    #tmp['name'] = '%s-%s'%(p1_str,p2_str);
+                nodes_O.append(tmp);
+                parents.append(tmp['parent'])
+                names.append(tmp['name'])
+            ##debugging:
+            #print(leaves_I[icoord_cnt],ivl_I[icoord_cnt],icoords)
+            #for xs, ys, color in zip(icoord_I[:icoord_cnt], dcoord_I[:icoord_cnt], colors_I[:icoord_cnt]):
+            #    plt.plot(xs, ys,  color)
+            #plt.show()
+        #add in dummy node
+        tmp={};
+        tmp['idcoord_index'] = icoord_cnt;
+        tmp['length'] = distances[link];
+        if convert_colors_hex_I: tmp['color'] = colors_hex_conv[colors_I[icoord_cnt]]
+        else: tmp['color'] = colors_I[icoord_cnt];
+        tmp['name']=str(np.round(np.mean(icoords),3));
+        tmp['parent']='';
+        nodes_O.append(tmp);
+        ##debugging:
+        #for xs, ys, color in zip(icoord_I, dcoord_I, colors_I):
+        #    plt.plot(xs, ys,  color)
+        #plt.show()
+        assert(len(ivl_I)==leaf_cnt)
+        return nodes_O;

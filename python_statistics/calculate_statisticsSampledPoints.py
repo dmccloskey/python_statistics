@@ -81,3 +81,38 @@ class calculate_statisticsSampledPoints(calculate_base):
                     vals.append(k)
         p = np.mean(vals)/len(data_1)*2
         return p;
+    # sample points from a known distribution
+    def sample_pointsFromDistribution(self,n_points_I,distribution_I='lognormal',dist_params_I={},raise_I = False):
+        '''
+        Sample points from a known distribution
+
+        Args:
+            n_points_I = int, number of points to sample
+            distribution_I = function/object, distribution function
+            dist_params_I = {}, of parameters for the distribution function
+
+        Returns:
+            points_O = ndarray of points of length n_points_I
+
+        Example:
+            n_points_I = 50
+            distribution_I = lognormal
+            distribution_params_I = {'mean':0.0,'sigma'=1.0}
+
+        Notes:
+            see http://docs.scipy.org/doc/numpy/reference/routines.random.html
+            for a list of supported distributions and associated parameters
+        '''
+        import numpy.random as npr
+
+        dist_params_I['size'] = n_points_I;
+        points_O = None;
+        try:
+            if hasattr(npr, distribution_I):
+                distribution_func = getattr(npr, distribution_I);
+                points_O = distribution_func(**dist_params_I);
+            else: print('numpy.random does not support ' + distribution_I);
+        except Exception as e:
+            if raise_I: raise;
+            else: print(e);
+        return points_O;

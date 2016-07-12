@@ -43,7 +43,10 @@ class calculate_histogram(calculate_base):
 
         return x_O,dx_O,y_O
     def pdf_kde(self,data_I,min_I=None,max_I=None,points_I=1000,bandwidth_I=None):
-        '''compute the pdf from the kernal density estimate'''
+        '''compute the pdf from the kernal density estimate
+        
+        alternative using sklearn: http://scikit-learn.org/stable/modules/density.html
+        '''
 
         if min_I and max_I:
             min_point = min_I;
