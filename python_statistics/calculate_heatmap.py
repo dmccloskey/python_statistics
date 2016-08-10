@@ -76,9 +76,11 @@ class calculate_heatmap(calculate_base):
         D2 = squareform(pdist(dm.T, metric=col_pdist_metric_I))
 
         Y = linkage(D1, method=row_linkage_method_I)
+        #Y = linkage(D1, method=row_linkage_method_I, metric=row_pdist_metric_I)
         Z1 = dendrogram(Y, labels=dm.index)
 
         Y = linkage(D2, method=col_linkage_method_I)
+        #Y = linkage(D2, method=col_linkage_method_I, metric=col_pdist_metric_I)
         Z2 = dendrogram(Y, labels=dm.columns)
 
         #parse the output
@@ -236,7 +238,15 @@ class calculate_heatmap(calculate_base):
                            'c':'#00CCCC',
                            'y':'#FFFF00',
                            'k':'#000000',
-                           'w':'FFFFFF',}
+                           'w':'FFFFFF',};
+
+        #dcoord_all = [];
+        #for row in dcoord_I:
+        #    for d in row:
+        #        if d != 0:
+        #            dcoord_all.append(d);
+        #lowest_distance_value = np.min(dcoord_all)*0.5;
+        ##lowest_distance_value = 1e-3;
 
         nodes_O = [];
         leaf_cnt = 0;
@@ -246,7 +256,12 @@ class calculate_heatmap(calculate_base):
             # calculate the distance
             distance1 = np.abs(dcoord_I[icoord_cnt][1]-dcoord_I[icoord_cnt][0]);
             distance2 = np.abs(dcoord_I[icoord_cnt][3]-dcoord_I[icoord_cnt][2]);
-            distances = [distance1,distance2]
+            distances = [distance1,distance2];
+            if sum(distances)==0:
+                #check for [0,0,0,0] dcoord
+                #insufficient precision for recording low value dcoord's
+                continue;
+                #distances = [lowest_distance_value,lowest_distance_value];
             # store the unique icoord
             icoord1 = icoord[0];
             icoord2 = icoord[2];
@@ -269,8 +284,13 @@ class calculate_heatmap(calculate_base):
                 tmp['parent'] = str(np.round(np.mean(icoords),3));
                 # check for an original observation
                 if 0 in dcoords[link]:
-                    tmp['name'] = ivl_I[leaf_cnt];
-                    leaf_cnt+=1;
+                    if len(ivl_I)<=leaf_cnt:
+                        print("check leaf # " + str(leaf_cnt));
+                        tmp['name'] = str(np.round(icoords[link],3));
+                        leaf_cnt+=1;
+                    else:
+                        tmp['name'] = ivl_I[leaf_cnt];
+                        leaf_cnt+=1;
                 else:
                     tmp['name'] = str(np.round(icoords[link],3));
                     #tmp['name'] = '%s-%s'%(p1_str,p2_str);
@@ -291,9 +311,11 @@ class calculate_heatmap(calculate_base):
         tmp['name']=str(np.round(np.mean(icoords),3));
         tmp['parent']='';
         nodes_O.append(tmp);
-        ##debugging:
-        #for xs, ys, color in zip(icoord_I, dcoord_I, colors_I):
-        #    plt.plot(xs, ys,  color)
-        #plt.show()
         assert(len(ivl_I)==leaf_cnt)
         return nodes_O;
+
+    def plot_dendrogram(icoord_I, dcoord_I, colors_I):
+        '''plot a dendrogram using matplot lib'''
+        for xs, ys, color in zip(icoord_I, dcoord_I, colors_I):
+            plt.plot(xs, ys,  color)
+        plt.show();
