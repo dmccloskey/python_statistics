@@ -21,7 +21,7 @@ class calculate_correlation(calculate_base):
         profile_list = profile_I.split("-");
         profile_O = [];
         for p in profile_list:
-            profile_O.append(int(p));
+            profile_O.append(float(p));
         return profile_O;
     def convert_profileList2Str(self,profile_I):
         '''Convert a list profile to string representation
