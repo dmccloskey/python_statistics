@@ -116,3 +116,34 @@ class calculate_statisticsSampledPoints(calculate_base):
             if raise_I: raise;
             else: print(e);
         return points_O;
+    def sample_pointsFromPoints(self,n_points_I,points_I,resample_params_I={},raise_I = False):
+        '''
+        Sample points from a distribution of points
+
+        Args:
+            n_points_I = int, number of points to sample
+            points_I = the set of known points
+            resample_params_I = {}, of parameters for the distribution function
+
+        Returns:
+            points_O = ndarray of points of length n_points_I
+
+        Example:
+            n_points_I = 50
+            distribution_I = [...]
+            resample_params_I = {'replace':True,'p'=None}
+
+        Notes:
+            see http://docs.scipy.org/doc/numpy/reference/generated/numpy.random.choice.html#numpy.random.choice
+            for a list of associated parameters
+        '''
+        import numpy.random as npr
+
+        dist_params_I['size'] = n_points_I;
+        points_O = None;
+        try:
+            points_O = npr.choice(points_I,**dist_params_I);
+        except Exception as e:
+            if raise_I: raise;
+            else: print(e);
+        return points_O;

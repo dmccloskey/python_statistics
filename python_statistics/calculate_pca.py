@@ -30,7 +30,7 @@ class calculate_pca(calculate_base):
         '''
         pass;
 
-    def extract_scoresAndLoadings_2D(self,data_scores,data_loadings,PCs):
+    def extract_scoresAndLoadings_2D_v1(self,data_scores,data_loadings,PCs):
         '''Extract out the scores and loadings
         INPUT:
         data_scores = listDict of pca/pls scores
@@ -63,6 +63,47 @@ class calculate_pca(calculate_base):
                 del tmp['axis'];
                 del tmp['var_proportion'];
                 del tmp['var_cumulative'];
+                data_scores_O[str(PC)].append(tmp);
+            #extract out the loadings
+            data_loadings_O[str(PC)]=[];
+            for cnt,d in enumerate(data_loadings[PC[0]][:]):
+                if d['component_name'] != data_loadings[PC[1]][cnt]['component_name'] and d['calculated_concentration_units'] != data_loadings[PC[1]][cnt]['calculated_concentration_units']:
+                    print('data is not in the correct order');
+                tmp = copy.copy(d);
+                tmp['loadings_' + str(PC[0])] = d['loadings'];
+                tmp['axislabel'+str(PC[0])] = 'Loadings' + str(PC[0]);
+                tmp['loadings_' + str(PC[1])] = data_loadings[PC[1]][cnt]['loadings'];
+                tmp['axislabel'+str(PC[1])] = 'Loadings' + str(PC[1]);
+                del tmp['loadings'];
+                del tmp['axis'];
+                data_loadings_O[str(PC)].append(tmp);
+        return data_scores_O,data_loadings_O;
+        
+    def extract_scoresAndLoadings_2D(self,data_scores,data_loadings,PCs):
+        '''Extract out the scores and loadings
+        INPUT:
+        data_scores = listDict of pca/pls scores
+        data_loadings = listDict of pca/pls loadings
+        PCs = [[],[],...] of integers, describing the 2D PC plots
+            E.G. PCs = [[1,2],[1,3],[2,3]];
+        OUTPUT:
+        data_scores_O = {'[1,2]':[],'[1,3]':[],'[2,3]':[],...} where each [] is a listDict of the data from PCs e.g. 1,2
+        data_loadings_O = {'[1,2]':[],'[1,3]':[],'[2,3]':[],...}
+        '''
+        data_scores_O,data_loadings_O = {},{};
+        for PC_cnt,PC in enumerate(PCs):
+            #extract out the scores
+            data_scores_O[str(PC)]=[];
+            for cnt,d in enumerate(data_scores[PC[0]][:]):
+                if d['sample_name_short'] != data_scores[PC[1]][cnt]['sample_name_short'] and d['calculated_concentration_units'] != data_scores[PC[1]][cnt]['calculated_concentration_units']:
+                    print('data is not in the correct order');
+                tmp = copy.copy(d);
+                tmp['score_' + str(PC[0])] = d['score'];
+                tmp['axislabel'+str(PC[0])] = 'PC' + str(PC[0]);
+                tmp['score_' + str(PC[1])] = data_scores[PC[1]][cnt]['score'];
+                tmp['axislabel'+str(PC[1])] = 'PC' + str(PC[1]);
+                del tmp['score'];
+                del tmp['axis'];
                 data_scores_O[str(PC)].append(tmp);
             #extract out the loadings
             data_loadings_O[str(PC)]=[];
