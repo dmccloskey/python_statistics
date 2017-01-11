@@ -342,27 +342,52 @@ class calculate_statisticsDescriptive(calculate_base):
         data_I = array of data points
         OUTPUT:
         descriptiveStats = {} with fields
+            'n',
             'mean'
             'var'
             'cv'
+            'ci'
             'lb'
             'ub'
             'min'
             'max'
             'median'
             'iq_1'
-            'iq_3'
+            'iq_3',
+            'iq'
         '''
-        mean,var,cv,lb,ub = self.calculate_ave_var_cv(data_I,confidence_I =confidence_I);
-        min, max, median, iq_1, iq_3 = self.calculate_interquartiles(data_I,iq_range_I=iq_range_I);
-        descriptiveStats_O = {
-            'mean':mean,
-            'var':var,
-            'cv':cv,
-            'lb':lb,
-            'ub':ub,
-            'min':min,
-            'max':max,
-            'median':median,
-            'iq_1':iq_1,
-            'iq_3':iq_3};
+        descriptiveStats_O = None;
+        try:
+            mean,var,cv,lb,ub = self.calculate_ave_var_cv(data_I,confidence_I =confidence_I);
+            min, max, median, iq_1, iq_3 = self.calculate_interquartiles(data_I,iq_range_I=iq_range_I);
+            descriptiveStats_O = {
+                'n':len(data_I),
+                'mean':mean,
+                'var':var,
+                'cv':cv,
+                'ci':confidence_I,
+                'lb':lb,
+                'ub':ub,
+                'min':min,
+                'max':max,
+                'median':median,
+                'iq_1':iq_1,
+                'iq_3':iq_3,
+                'iq':iq_range_I};
+        except Exception as e:
+            print(e);
+            descriptiveStats_O = {
+                'n':len(data_I),
+                'mean':None,
+                'var':None,
+                'cv':None,
+                'ci':confidence_I,
+                'lb':None,
+                'ub':None,
+                'min':None,
+                'max':None,
+                'median':None,
+                'iq_1':None,
+                'iq_3':None,
+                'iq':iq_range_I};
+        return descriptiveStats_O;
