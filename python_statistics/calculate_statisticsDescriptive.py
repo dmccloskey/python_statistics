@@ -307,6 +307,8 @@ class calculate_statisticsDescriptive(calculate_base):
             difference_O = np.abs(data_2-data_1);
         elif type_I == 'geometric': #i.e. distance
             difference_O = np.log(np.exp(data_2)+np.exp(data_1));
+        elif type_I == 'euclidean': #i.e. distance
+            difference_O = np.sqrt(np.power(data_2,2)+np.power(data_1,2));
         else:
             difference_O = data_2-data_1;
             print("type_I not recognized.  Relative type will be applied as default.");
@@ -327,7 +329,8 @@ class calculate_statisticsDescriptive(calculate_base):
         else:
             difference_O = difference_O;
 
-        if len(data_1_I)==1:
+        if type(difference_O)==type(np.array(0.0)) and \
+            len(difference_O)==1:
             return difference_O[0];
         else:
             return difference_O;
