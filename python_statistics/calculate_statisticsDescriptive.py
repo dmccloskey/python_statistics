@@ -158,13 +158,15 @@ class calculate_statisticsDescriptive(calculate_base):
     # calculate the interquartiles
     def calculate_interquartiles(self,data_I,iq_range_I = [25,75]):
         '''compute the interquartiles and return the min, max, median, iq1 and iq3'''
+        try:
+            min_O = np.min(data_I);
+            max_O = np.max(data_I);
+            iq_1_O, iq_2_O = np.percentile(data_I, iq_range_I)
+            median_O = np.median(data_I);
 
-        min_O = np.min(data_I);
-        max_O = np.max(data_I);
-        iq_1_O, iq_2_O = np.percentile(data_I, iq_range_I)
-        median_O = np.median(data_I);
-
-        return min_O, max_O, median_O, iq_1_O, iq_2_O;
+            return min_O, max_O, median_O, iq_1_O, iq_2_O;
+        except Exception as e:
+            print(e)
     # calculate the fold change
     def calculate_foldChange(self,data_1_I,data_2_I,type_I = 'relative', scale_values_I = None,scale_fold_change_I = None):
         """Calculate the fold change between two data value 1 and 2
