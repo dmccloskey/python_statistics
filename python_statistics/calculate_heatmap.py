@@ -60,6 +60,8 @@ class calculate_heatmap(calculate_base):
         'ivl':  A list of labels corresponding to the leaf nodes.
         'leaves': For each i, H[i] == j, cluster node j appears in position i in the left-to-right traversal of the leaves, where \(j < 2n-1\) and \(i < n\). If j is less than n, the i-th leaf node corresponds to an original observation. Otherwise, it corresponds to a non-singleton cluster."""
 
+        heatmap_data_O,dendrogram_col_O,dendrogram_row_O=None,None,None
+
         #parse input into col_labels and row_labels
         #TODO: pandas is not needed for this.
         mets_data = pd.DataFrame(data=data_I, index=row_labels_I, columns=column_labels_I)
@@ -77,23 +79,51 @@ class calculate_heatmap(calculate_base):
 
         Y = linkage(D1, method=row_linkage_method_I)
         #Y = linkage(D1, method=row_linkage_method_I, metric=row_pdist_metric_I)
-        Z1 = dendrogram(Y, labels=dm.index)
+        try:
+            Z1 = dendrogram(Y, labels=dm.index)
+            row_leaves = Z1['leaves'] # no hclustering; same as heatmap_data['row']
+            row_ivl = Z1['ivl'] # no hclustering; same as heatmap_data['row']
+            row_colors = Z1['color_list'] # no hclustering; same as heatmap_data['row']
+            row_icoord = Z1['icoord'] # no hclustering; same as heatmap_data['row']
+            row_dcoord = Z1['dcoord'] # no hclustering; same as heatmap_data['row']
+
+            dendrogram_row_O = {
+                            'leaves':row_leaves,
+                            'icoord':row_icoord,
+                            'dcoord':row_dcoord,
+                            'ivl':row_ivl,
+                            'colors':row_colors,
+                            'pdist_metric':row_pdist_metric_I,
+                            'linkage_method':row_linkage_method_I}
+        except RuntimeError as e:
+            print(e)
+            print('running alternate for large data sets that does not compute')
+            print('color_list, icoord, or dcoord for dendrograms')
+            row_leaves,row_ivl=self.calculate_dendrogramOrderAndLabels(Y,row_labels)            
 
         Y = linkage(D2, method=col_linkage_method_I)
         #Y = linkage(D2, method=col_linkage_method_I, metric=col_pdist_metric_I)
-        Z2 = dendrogram(Y, labels=dm.columns)
+        try:
+            Z2 = dendrogram(Y, labels=dm.columns)
+            col_leaves = Z2['leaves'] # no hclustering; same as heatmap_data['col']
+            col_ivl = Z2['ivl'] # no hclustering; same as heatmap_data['col']
+            col_colors = Z2['color_list'] # no hclustering; same as heatmap_data['col']
+            col_icoord = Z2['icoord'] # no hclustering; same as heatmap_data['col']
+            col_dcoord = Z2['dcoord'] # no hclustering; same as heatmap_data['col']
 
+            dendrogram_col_O = {'leaves':col_leaves,
+                            'icoord':col_icoord,
+                            'dcoord':col_dcoord,
+                            'ivl':col_ivl,
+                            'colors':col_colors,
+                            'pdist_metric':col_pdist_metric_I,
+                            'linkage_method':col_linkage_method_I};
+        except RuntimeError as e:
+            print(e)
+            print('running alternate for large data sets that does not compute')
+            print('color_list, icoord, or dcoord for dendrograms')
+            col_leaves,col_ivl = self.calculate_dendrogramOrderAndLabels(Y,col_labels)
         #parse the output
-        col_leaves = Z2['leaves'] # no hclustering; same as heatmap_data['col']
-        row_leaves = Z1['leaves'] # no hclustering; same as heatmap_data['row']
-        col_colors = Z2['color_list'] # no hclustering; same as heatmap_data['col']
-        row_colors = Z1['color_list'] # no hclustering; same as heatmap_data['row']
-        col_icoord = Z2['icoord'] # no hclustering; same as heatmap_data['col']
-        row_icoord = Z1['icoord'] # no hclustering; same as heatmap_data['row']
-        col_dcoord = Z2['dcoord'] # no hclustering; same as heatmap_data['col']
-        row_dcoord = Z1['dcoord'] # no hclustering; same as heatmap_data['row']
-        col_ivl = Z2['ivl'] # no hclustering; same as heatmap_data['col']
-        row_ivl = Z1['ivl'] # no hclustering; same as heatmap_data['row']
 
         #heatmap data matrix
         heatmap_data_O = []
@@ -109,24 +139,7 @@ class calculate_heatmap(calculate_base):
                         'col_linkage_method':col_linkage_method_I,
                         'row_linkage_method':row_linkage_method_I,
                        };
-                heatmap_data_O.append(tmp)
-
-        dendrogram_col_O = {'leaves':col_leaves,
-                        'icoord':col_icoord,
-                        'dcoord':col_dcoord,
-                        'ivl':col_ivl,
-                        'colors':col_colors,
-                        'pdist_metric':col_pdist_metric_I,
-                        'linkage_method':col_linkage_method_I};
-
-        dendrogram_row_O = {
-                        'leaves':row_leaves,
-                        'icoord':row_icoord,
-                        'dcoord':row_dcoord,
-                        'ivl':row_ivl,
-                        'colors':row_colors,
-                        'pdist_metric':row_pdist_metric_I,
-                        'linkage_method':row_linkage_method_I};
+                heatmap_data_O.append(tmp);
         return heatmap_data_O,dendrogram_col_O,dendrogram_row_O;
 
     def make_heatmap(self,
@@ -319,3 +332,33 @@ class calculate_heatmap(calculate_base):
         for xs, ys, color in zip(icoord_I, dcoord_I, colors_I):
             plt.plot(xs, ys,  color)
         plt.show();
+
+    def calculate_dendrogramOrderAndLabels(self,Y,labels):
+        '''Calculate the dendrogram leaves ordering and labels
+        Args:
+            Y
+            labels
+
+        Returns:
+            leaves_indexes == Z1['leaves']
+            leaves_labels == Z1['ivl']
+
+        Notes:
+        Pclust = D1[ix,:]
+        Pclust = Pclust[:,ix]
+        pyplot.imshow(Pclust, interpolation="nearest")
+
+        Credit: 
+        http://stackoverflow.com/questions/12572436/calculate-ordering-of-dendrogram-leaves
+
+        '''
+        n = len(Y) + 1
+        cache = dict()
+        for k in range(len(Y)):
+            c1, c2 = int(Y[k][0]), int(Y[k][1])
+            c1 = [c1] if c1 < n else cache.pop(c1)
+            c2 = [c2] if c2 < n else cache.pop(c2)
+            cache[n+k] = c1 + c2
+        ix = cache[2*len(Y)] 
+        ivl = [labels[i] for i in ix]
+        return ix,ivl

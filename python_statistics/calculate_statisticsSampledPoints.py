@@ -82,7 +82,7 @@ class calculate_statisticsSampledPoints(calculate_base):
         p = np.mean(vals)/len(data_1)*2
         return p;
     # sample points from a known distribution
-    def sample_pointsFromDistribution(self,n_points_I,distribution_I='lognormal',dist_params_I={},raise_I = False):
+    def sample_pointsFromDistribution(self,n_points_I,distribution_I='lognormal',dist_params_I={},seed_I=1,raise_I = False):
         '''
         Sample points from a known distribution
 
@@ -90,6 +90,7 @@ class calculate_statisticsSampledPoints(calculate_base):
             n_points_I = int, number of points to sample
             distribution_I = function/object, distribution function
             dist_params_I = {}, of parameters for the distribution function
+            seed_I = int, seed to initialize the random number generator
 
         Returns:
             points_O = ndarray of points of length n_points_I
@@ -108,6 +109,8 @@ class calculate_statisticsSampledPoints(calculate_base):
         dist_params_I['size'] = n_points_I;
         points_O = None;
         try:
+            if seed_I:
+                npr.seed(seed_I);
             if hasattr(npr, distribution_I):
                 distribution_func = getattr(npr, distribution_I);
                 points_O = distribution_func(**dist_params_I);
@@ -116,7 +119,7 @@ class calculate_statisticsSampledPoints(calculate_base):
             if raise_I: raise;
             else: print(e);
         return points_O;
-    def sample_pointsFromPoints(self,n_points_I,points_I,resample_params_I={},raise_I = False):
+    def sample_pointsFromPoints(self,n_points_I,points_I,resample_params_I={},seed_I=1,raise_I = False):
         '''
         Sample points from a distribution of points
 
@@ -130,7 +133,7 @@ class calculate_statisticsSampledPoints(calculate_base):
 
         Example:
             n_points_I = 50
-            distribution_I = [...]
+            points_I = [...]
             resample_params_I = {'replace':True,'p'=None}
 
         Notes:
@@ -139,10 +142,12 @@ class calculate_statisticsSampledPoints(calculate_base):
         '''
         import numpy.random as npr
 
-        dist_params_I['size'] = n_points_I;
+        resample_params_I['size'] = n_points_I;
         points_O = None;
         try:
-            points_O = npr.choice(points_I,**dist_params_I);
+            if seed_I:
+                npr.seed(seed_I);
+            points_O = npr.choice(points_I,**resample_params_I);
         except Exception as e:
             if raise_I: raise;
             else: print(e);
