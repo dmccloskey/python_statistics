@@ -45,7 +45,7 @@ from sklearn.cross_validation import check_cv #Input checker utility for buildin
 #Matrix Decomposition
 from sklearn.decomposition import PCA #Principal component analysis PCA)
 from sklearn.decomposition import IncrementalPCA #Incremental principal components analysis IPCA).
-from sklearn.decomposition import ProjectedGradientNMF #Non-Negative Matrix Factorization NMF)
+#from sklearn.decomposition import ProjectedGradientNMF #Non-Negative Matrix Factorization NMF)
 from sklearn.decomposition import RandomizedPCA #Principal component analysis PCA) using randomized SVD
 from sklearn.decomposition import KernelPCA #Kernel Principal component analysis KPCA)
 from sklearn.decomposition import FactorAnalysis #Factor Analysis FA)

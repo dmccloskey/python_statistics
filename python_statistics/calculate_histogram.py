@@ -33,7 +33,7 @@ class calculate_histogram(calculate_base):
         else:
             n_bins = n_bins_I;
 
-        hist = np.histogram(data_I,n_bins);
+        hist = np.histogram(data_I,n_bins,range=n_range_I);
         y_O = hist[0];
         edges = hist[1];
 
